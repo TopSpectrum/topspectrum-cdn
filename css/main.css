@@ -1,0 +1,435 @@
+/*/!**/
+ /** Copyright (c) 2015. Top Level Spectrum. All rights reserved.*/
+ /**!/*/
+/*.bs-callout {*/
+    /*padding: 20px;*/
+    /*margin: 20px 0;*/
+    /*border: 1px solid #e1e1e8;*/
+    /*border-left-width: 5px;*/
+    /*border-radius: 3px;*/
+/*}*/
+
+/*.bs-callout p:last-child {*/
+    /*margin-bottom: 0;*/
+/*}*/
+
+/*.bs-callout h4 {*/
+    /*margin-top: 0;*/
+    /*margin-bottom: 5px;*/
+/*}*/
+
+/*.bs-callout-danger h4 {*/
+    /*color: #ce4844;*/
+/*}*/
+
+/*.bs-callout-danger {*/
+    /*border-left-color: #ce4844;*/
+/*}*/
+
+/*.bs-callout-info h4 {*/
+    /*color: #1b809e;*/
+/*}*/
+
+/*.bs-callout-info {*/
+    /*border-left-color: #1b809e;*/
+/*}*/
+
+/*.anchorjs-link {*/
+    /*float: left;*/
+    /*width: 1em;*/
+    /*height: 1em;*/
+    /*margin-left: -1.2em;*/
+    /*opacity: 0;*/
+    /*color: inherit;*/
+    /*text-align: center;*/
+/*}*/
+
+/*.anchorjs-icon {*/
+    /*font-size: 60%;*/
+    /*vertical-align: .2em;*/
+/*}*/
+
+/*.anchorjs-icon {*/
+    /*font-family: anchorjs-link;*/
+    /*speak: none;*/
+    /*font-style: normal;*/
+    /*font-weight: 400;*/
+    /*font-variant: normal;*/
+    /*text-transform: none;*/
+    /*line-height: 1;*/
+    /*-webkit-font-smoothing: antialiased;*/
+    /*-moz-osx-font-smoothing: grayscale;*/
+/*}*/
+
+/*.anchorjs-icon:before {*/
+    /*content: "\e600";*/
+/*}*/
+
+/*:after, :before {*/
+    /*-webkit-box-sizing: border-box;*/
+    /*-moz-box-sizing: border-box;*/
+    /*box-sizing: border-box;*/
+/*}*/
+
+
+/*/!**/
+ /** Author: Carlos Alvarez*/
+ /** URL: http://alvarez.is*/
+ /***/
+ /** Project Name: FLATTY - Free Bootstrap 3 Theme*/
+ /** Version: 1.0*/
+ /** URL: http://blacktie.co*/
+ /**!/*/
+
+/*body {*/
+    /*background-color: #f2f2f2;*/
+    /*font-family: 'Lato', sans-serif;*/
+    /*font-weight: 300;*/
+    /*font-size: 16px;*/
+    /*color: #555;*/
+
+    /*-webkit-font-smoothing: antialiased;*/
+    /*-webkit-overflow-scrolling: touch;*/
+/*}*/
+
+/*/!* Titles *!/*/
+/*h1, h2, h3, h4, h5, h6 {*/
+    /*font-family: 'Lato', sans-serif;*/
+    /*font-weight: 300;*/
+    /*color: #333;*/
+/*}*/
+
+/*h1 {*/
+    /*font-size: 40px;*/
+/*}*/
+
+/*h3 {*/
+    /*color: #95a5a6;*/
+    /*font-weight: 400;*/
+/*}*/
+
+/*h4 {*/
+    /*color: #95a5a6;*/
+    /*font-weight: 400;*/
+    /*font-size: 20px;*/
+/*}*/
+
+/*/!* Paragraph & Typographic *!/*/
+/*p {*/
+    /*line-height: 28px;*/
+    /*margin-bottom: 25px;*/
+    /*font-size: 16px;*/
+/*}*/
+
+/*.centered {*/
+    /*text-align: center;*/
+/*}*/
+
+/*/!* Links *!/*/
+/*a {*/
+    /*color: #3498db;*/
+    /*word-wrap: break-word;*/
+
+    /*-webkit-transition: color 0.1s ease-in, background 0.1s ease-in;*/
+    /*-moz-transition: color 0.1s ease-in, background 0.1s ease-in;*/
+    /*-ms-transition: color 0.1s ease-in, background 0.1s ease-in;*/
+    /*-o-transition: color 0.1s ease-in, background 0.1s ease-in;*/
+    /*transition: color 0.1s ease-in, background 0.1s ease-in;*/
+/*}*/
+
+/*a:hover,*/
+/*a:focus {*/
+    /*color: #7b7b7b;*/
+    /*text-decoration: none;*/
+    /*outline: 0;*/
+/*}*/
+
+/*a:before,*/
+/*a:after {*/
+    /*-webkit-transition: color 0.1s ease-in, background 0.1s ease-in;*/
+    /*-moz-transition: color 0.1s ease-in, background 0.1s ease-in;*/
+    /*-ms-transition: color 0.1s ease-in, background 0.1s ease-in;*/
+    /*-o-transition: color 0.1s ease-in, background 0.1s ease-in;*/
+    /*transition: color 0.1s ease-in, background 0.1s ease-in;*/
+/*}*/
+
+/*hr {*/
+    /*display: block;*/
+    /*height: 1px;*/
+    /*border: 0;*/
+    /*border-top: 1px solid #ccc;*/
+    /*margin: 1em 0;*/
+    /*padding: 0;*/
+/*}*/
+
+/*.navbar-default {*/
+    /*background-color: #3498db;*/
+    /*border-color: transparent;*/
+    /*border-radius: 0;*/
+/*}*/
+
+/*.navbar-default .navbar-brand {*/
+    /*color: white;*/
+/*}*/
+
+/*.navbar-default .navbar-nav > li > a {*/
+    /*color: white;*/
+/*}*/
+
+/*/!* Helpers *!/*/
+
+.mt {
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+/*i {*/
+    /*margin: 8px;*/
+    /*color: #3498db;*/
+/*}*/
+
+/*/!* HeaderWrap *!/*/
+/*#headerwrap {*/
+    /*/!* background: url(../img/bg01.jpg) no-repeat center top; *!/*/
+    /*background-color: #3498db;*/
+    /*margin-top: -20px;*/
+    /*padding-top: 200px;*/
+    /*background-attachment: relative;*/
+    /*background-position: center center;*/
+    /*min-height: 650px;*/
+    /*width: 100%;*/
+
+    /*-webkit-background-size: 100%;*/
+    /*-moz-background-size: 100%;*/
+    /*-o-background-size: 100%;*/
+    /*background-size: 100%;*/
+
+    /*-webkit-background-size: cover;*/
+    /*-moz-background-size: cover;*/
+    /*-o-background-size: cover;*/
+    /*background-size: cover;*/
+/*}*/
+
+/*#headerwrap h1 {*/
+    /*margin-top: 60px;*/
+    /*margin-bottom: 15px;*/
+    /*color: white;*/
+    /*font-size: 45px;*/
+    /*font-weight: 300;*/
+    /*letter-spacing: 1px;*/
+/*}*/
+
+/*#headerwrap .form-control {*/
+    /*height: 42px;*/
+    /*font-size: 18px;*/
+    /*width: 280px;*/
+/*}*/
+
+/*.tooltip-inner {*/
+    /*max-width: 950px;*/
+    /*/!* If max-width does not work, try using width instead *!/*/
+    /*/!*width: 950px;*!/*/
+/*}*/
+
+
+/* Questions */
+/*==================================================
+=            Bootstrap 3 Media Queries             =
+==================================================*/
+
+/*==========  Mobile First Method  ==========*/
+
+/* Custom, iPhone Retina */
+/*.hidden-320 {*/
+    /*display: inherit;*/
+/*}*/
+
+/*@media only screen and (max-width: 290px) {*/
+    /*.visible-xxs {*/
+        /*display: inherit;*/
+    /*}*/
+    /*.hidden-xxs {*/
+        /*display: none;*/
+    /*}*/
+/*}*/
+
+/*@media only screen and (min-width: 290px) {*/
+    /*.visible-xxs {*/
+        /*display: none;*/
+    /*}*/
+    /*.hidden-xxs {*/
+        /*display: inherit;*/
+    /*}*/
+/*}*/
+
+.question {
+    font-size: 20px;
+}
+
+@media only screen and (max-width: 380px) {
+    .hidden-xxs {
+        display: none !important;
+    }
+    .radio-inline {
+        margin-left: 2px !important;
+    }
+}
+
+@media only screen and (min-width : 380px) {
+
+}
+
+/* Extra Small Devices, Phones */
+@media only screen and (max-width : 480px) {
+    .hidden-320 {
+        display: none;
+    }
+}
+
+@media only screen and (min-width : 480px) {
+    .radio-inline {
+        margin-left: inherit;
+    }
+
+    .question {
+        font-size: 20px;
+    }
+}
+
+/* Small Devices, Tablets */
+@media only screen and (min-width : 768px) {
+    .question {
+        font-size: 30px;
+    }
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (min-width : 992px) {
+
+}
+
+/* Large Devices, Wide Screens */
+@media only screen and (min-width : 1200px) {
+
+}
+
+/*==========  Non-Mobile First Method  ==========*/
+
+/*.radio label .check, .radio label .circle {*/
+    /*height: 45px !important;*/
+    /*width: 45px !important;*/
+/*}*/
+
+/* Large Devices, Wide Screens */
+@media only screen and (max-width : 1200px) {
+
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (max-width : 992px) {
+
+}
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px) {
+
+}
+
+/* Extra Small Devices, Phones */
+@media only screen and (max-width : 480px) {
+
+}
+
+/* Custom, iPhone Retina */
+@media only screen and (max-width : 320px) {
+
+}
+
+
+table td {
+    width: 100px;
+    text-align: center;
+    align-content:center;
+}
+
+table .radio input, table .radio label, table .radio, .radio label span {
+    margin: 0 !important;
+    padding: 0 !important;
+    left: 0;
+    vertical-align: middle;
+}
+
+table label, table td {
+    cursor: pointer !important;
+}
+
+.radio label span {
+    margin-left: -4px !important;
+}
+
+table thead label {
+    margin-left: 5px;
+}
+
+input[placeholder] { text-overflow: ellipsis; }
+::-moz-placeholder { text-overflow: ellipsis; } /* firefox 19+ */
+input:-moz-placeholder { text-overflow: ellipsis; }
+
+input:focus::-webkit-input-placeholder { color:transparent !important; opacity: 0; }
+input:focus:-moz-placeholder { color:transparent; } /* FF 4-18 */
+input:focus::-moz-placeholder { color:transparent; } /* FF 19+ */
+input:focus:-ms-input-placeholder { color:transparent; } /* IE 10+ */
+
+/**/
+
+.navbar-login
+{
+    width: 305px;
+    padding: 10px;
+    padding-bottom: 0px;
+}
+
+.navbar-login-session
+{
+    padding: 10px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+}
+
+.icon-size
+{
+    font-size: 87px;
+}
+
+.nav-user-photo {
+    margin: -8px 8px 0 0;
+    border-radius: 100%;
+    border: 2px solid rgba(255,255,255,0.5);
+    max-width: 33px!important;
+    max-height: 33px !important;
+}
+
+.identity-connected .if-anonymous {
+    display: none;
+}
+
+.modal-backdrop
+{
+    background-color: black;
+    /*background-color: gba(0,0,0,.3);*/
+    opacity: .8 !important;
+}
+
+/* Disable helpful hints */
+form::-webkit-validation-bubble-message,
+form input::-webkit-validation-bubble-message,
+form select::-webkit-validation-bubble-message,
+form textarea::-webkit-validation-bubble-message {
+    display:none;
+}
+
+/*.ladda-button .ladda-spinner {*/
+    /*margin: 0 !important;*/
+/*}*/
+
+/*.ladda-button[data-style=slide-right] .ladda-spinner*/

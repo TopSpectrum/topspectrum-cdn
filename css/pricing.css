@@ -1,0 +1,284 @@
+@font-face{font-family:'Emoji Passthrough';src:url(/2297/fonts/emoji-passthrough.woff) format('woff');font-weight:400;unicode-range:U+1F300-1F5FF,U+1F600-1F64F,U+1F680-1F6FF,U+2600-26FF}
+@font-face{font-family:appleLogo;src:local("Lucida Grande");unicode-range:U+F8FF}
+.helvetica{font-family:'Emoji Passthrough',"Helvetica Neue",Helvetica,"Segoe UI",Tahoma,Arial,sans-serif}
+.lato{font-family:'Emoji Passthrough',Lato,appleLogo,sans-serif;font-weight:400;-webkit-font-smoothing:antialiased}
+.lato_black{font-family:'Emoji Passthrough',Lato,appleLogo,sans-serif;font-weight:900}
+.lato_bold{font-family:'Emoji Passthrough',Lato,appleLogo,sans-serif;font-weight:700}
+.lato_regular{font-family:'Emoji Passthrough',Lato,appleLogo,sans-serif;font-weight:500}
+.monospace{font-family:Monaco,Menlo,Consolas,"Courier New",monospace!important}
+@-webkit-keyframes progress_bar{from{background-position:0 0}
+    to{background-position:-56px 0}
+}
+@-moz-keyframes progress_bar{from{background-position:0 0}
+    to{background-position:-56px 0}
+}
+@keyframes progress_bar{from{background-position:0 0}
+    to{background-position:-56px 0}
+}
+.transparent{color:transparent!important}
+.neutral_white{color:#fff!important}
+.neutral_white_bg{background-color:#fff!important}
+.neutral_grey{color:#fbfbfa!important}
+.indifferent_grey{color:#555459!important}
+.indifferent_grey_bg{background-color:#555459!important}
+.charcoal_grey{color:#434245!important}
+.subtle_silver{color:#9e9ea6!important}
+.subtle_silver_bg{background-color:#9e9ea6!important}
+.soft_grey{color:#e8e8e8!important}
+.soft_grey_bg{background-color:#e8e8e8!important}
+.severe_grey{color:#3d3c40!important}
+.severe_grey_bg{background-color:#3d3c40!important}
+.dull_grey{color:#8b898f!important}
+.dull_grey_bg{background-color:#8b898f!important}
+.plastic_grey{color:#88919b!important}
+.plastic_grey_bg{background-color:#88919b!important}
+.cloud_silver{color:#babbbf!important}
+.cloud_silver_bg{background-color:#babbbf!important}
+.warm_white{color:#fbfaf8!important}
+.warm_white_bg{background-color:#fbfaf8!important}
+.cloud_white{color:#f2f2f5!important}
+.cloud_white_bg{background-color:#f2f2f5!important}
+.seafoam_green{color:#2ab27b!important}
+.seafoam_green_bg{background-color:#2ab27b!important}
+.clear_blue{color:#439fe0!important}
+.clear_blue_bg{background-color:#439fe0!important}
+.solid_blue{color:#2780f8!important}
+.solid_blue_bg{background-color:#2780f8!important}
+.candy_red{color:#eb4d5c!important}
+.candy_red_bg{background-color:#eb4d5c!important}
+.highlight_yellow_bg{background-color:#fffce0!important}
+.mention_yellow_bg{background-color:#fff3b8!important}
+.star_yellow{color:#fc0!important}
+.star_yellow_bg{background-color:#fc0!important}
+.yolk_orange{color:#edb431!important}
+.yolk_orange_bg{background-color:#edb431!important}
+.thrills_purple{color:#7d60c5!important}
+.burnt_violet{color:#4d394b!important}
+.burnt_violet_bg{background-color:#4d394b!important}
+.ocean_teal{color:#4c9689!important}
+.ocean_teal_bg{background-color:#4c9689!important}
+.havana_blue{color:#2a80b9!important}
+.havana_blue_bg{background-color:#2a80b9!important}
+.pale_blue{color:#f0f7fb!important}
+.pale_blue_bg{background-color:#f0f7fb!important}
+.sky_blue{color:#439fe0!important}
+.sky_blue_bg{background-color:#439fe0!important}
+.slate_blue{color:#3c4b5b!important}
+.slate_blue_bg{background-color:#3c4b5b!important}
+.muddy_lilac{color:#937e91!important}
+.muddy_lilac_bg{background-color:#937e91!important}
+.moscow_red,.moscow_red_on_hover:hover{color:#cb5234!important}
+.moscow_red_bg{background-color:#cb5234!important}
+.moscow_red_dark{color:#870000!important}
+.moscow_red_dark_bg{background-color:#870000!important}
+.mustard_yellow{color:#dfa941!important}
+.mustard_yellow_bg{background-color:#dfa941!important}
+.kelly_green{color:#36a64f!important}
+.kelly_green_dark{color:#257337!important}
+.kelly_green_bg{background-color:#36a64f!important}
+.channel_page_blue{color:#2d9cf5!important}
+.pin_orange{color:#ff876d!important}
+.dropbox_blue{color:#007ee5!important}
+.dropbox_blue_bg{background-color:#007ee5!important}
+.twitter_blue{color:#55acee!important}
+.twitter_blue_bg{background-color:#55acee!important}
+.gdrive_blue_bg{background-color:#4285f4!important}
+.screenhero_blue{color:#1a9cdb!important}
+.screenhero_blue_bg{background-color:#1a9cdb!important}
+body{-webkit-font-smoothing:antialiased}
+h3{margin-bottom:1.5rem}
+.section_divider{margin:0;border-top:0;border-bottom:2px solid #e9edf5}
+.brick_icon{display:none!important}
+.intro{height:auto;margin-bottom:12rem}
+.intro h1{font-size:3.5rem;font-weight:900;color:#2b3645}
+.intro h2{padding:0 2rem;font-size:1.5rem;font-weight:500;color:#68686f;line-height:1.8125rem}
+.intro p.alert{width:60rem;margin:0 auto}
+.plans{padding-bottom:3.75rem;background-color:#fff}
+.plan_container{width:60rem;margin:0 auto}
+.plan{width:30%;margin:-9.625rem 1.3125rem 0 0;float:left}
+.plan:last-child{margin-right:0}
+.plan h4{display:inline-block;position:relative;top:-.25rem;margin-left:1.25rem;margin-bottom:.75rem;padding:.25rem .375rem;border-radius:3px;color:#fff;font-size:.75rem;line-height:.75rem;text-transform:uppercase}
+.plan h4 i{display:inline-block;position:relative;top:2px;left:4px;width:14px;height:14px;margin-top:-4px;background-image:url(/5317/img/pricing/arrow_down.png);background-size:100%;background-repeat:no-repeat}
+.plan ul{list-style:circle;margin-left:1.25em;font-size:1rem;line-height:1rem}
+.plan ul.coming_soon_list{font-style:italic}
+.plan li{margin-bottom:1.125rem}
+.plan li span{color:#69696f}
+.plan_card{position:relative;padding:1.375rem 0 1.25rem;border-radius:10px;color:#fff;text-align:center;text-shadow:0 3px 1px rgba(0,0,0,.1)}
+.plan_card h3{margin-bottom:.625rem;font-weight:900;color:#fff}
+.plan_card .brick_icon{display:inline-block;width:28px;height:36px;margin-right:7px;vertical-align:bottom;background-size:100%;background-repeat:no-repeat}
+.plan_card.plan_card_coming_soon:after{display:block;content:'Coming 2015';position:absolute;top:4.125rem;right:0;width:100%;padding:.25rem 0;font-size:1.25rem;font-weight:900;line-height:5.25rem;opacity:.9}
+.no_buttons .plan_card{min-height:17.5rem}
+.plan_price{position:relative;display:block;height:6rem;font-size:5.5rem;line-height:6.5rem;font-weight:900;margin-bottom:.5rem;letter-spacing:-2px;}
+.plan_price .cents{position:absolute;top:-.25rem;font-size:1.5rem;letter-spacing:-1px;font-weight:700}
+.plan_price .currency{position:relative;top:-1.75rem;font-weight:400;font-size:3rem;letter-spacing:0}
+.plan_price_details{display:block;margin-bottom:1.25rem;font-size:.875rem;line-height:1rem;opacity:.8;text-shadow:none}
+a.plan_price_details{color:#fff;text-decoration:underline}
+.detail_button{min-width:7rem}
+.current_plan{display:inline-block;padding:8px 14px 7px;font-size:15px;line-height:1.2rem;font-weight:900;text-shadow:none}
+.plan_subhead{margin:1.375em 0;padding:0 0 1.25em;border-bottom:1px solid transparent}
+.plan_subhead h3{margin-bottom:0;font-size:1.25rem;font-weight:900}
+.plan_subhead p{margin-bottom:0;opacity:.8}
+#plan_lite ul{color:#8a74b9}
+#plan_lite .plan_card,#plan_lite h4{background-color:#8a74b9}
+#plan_lite .plan_price{margin-left:-1rem}
+/*#plan_lite .brick_icon{background-image:url(/b9ff/img/pricing/brick_lite.png);background-position:-2px -2px}*/
+#plan_lite .detail_button{background-color:#6e54a6}
+#plan_lite .current_plan,#plan_lite .detail_button{margin-top:2.25rem}
+#plan_lite .plan_subhead{border-color:#8a74b9}
+#plan_lite .plan_subhead h3,#plan_lite .plan_subhead p{color:#8a74b9}
+#plan_standard ul{color:#4cb992}
+#plan_standard .plan_card,#plan_standard h4{background-color:#4cb992}
+/*#plan_standard .brick_icon{background-image:url(/b9ff/img/pricing/brick_standard.png);margin-right:11px}*/
+#plan_standard .detail_button{background-color:#3b9776}
+#plan_standard .plan_subhead{border-color:#4cb992}
+#plan_standard .plan_subhead h3,#plan_standard .plan_subhead p{color:#4cb992}
+#plan_plus ul{color:#3499e0}
+#plan_plus .plan_card,#plan_plus h4{background-color:#3499e0}
+/*#plan_plus .brick_icon{background-image:url(/b9ff/img/pricing/brick_plus.png);background-size:contain}*/
+#plan_plus .detail_button{background-color:#1e7fc3}
+#plan_plus .plan_subhead{border-color:#3499e0}
+#plan_plus .plan_subhead h3,#plan_plus .plan_subhead p{color:#3499e0}
+#plan_enterprise ul{color:#efb57c}
+#plan_enterprise .plan_card,#plan_enterprise h4{background-color:#efb57c}
+#plan_enterprise .plan_card.plan_card_coming_soon:after,#plan_enterprise h4.plan_card_coming_soon:after{background-color:#e99b4f}
+#plan_enterprise .plan_price{margin-left:-1rem}
+/*#plan_enterprise .brick_icon{background-image:url(/b9ff/img/pricing/brick_enterprise.png);background-size:contain}*/
+#plan_enterprise .detail_button{background-color:#e99b4f;margin-top:2.25rem}
+#plan_enterprise .plan_subhead{border-color:#efb57c}
+#plan_enterprise .plan_subhead h3,#plan_enterprise .plan_subhead p{color:#efb57c}
+#plan_modal{width:940px;margin-left:-470px}
+#plan_modal.modal.fade.in{top:20%}
+#plan_modal .modal-body{padding:.5rem;height:500px;max-height:none;overflow-y:hidden}
+#plan_modal .close{position:absolute;top:.5rem;right:1rem}
+#plan_modal #plan_calculator{float:left;padding:4.75rem 0 3rem 4rem;width:700px}
+#plan_modal .plan_sentence{font-weight:700;font-size:2rem;line-height:2.25rem;margin-bottom:2rem}
+#plan_modal .plan_description{display:none;float:left;padding:1.5rem 3rem 3rem 4rem;width:700px}
+#plan_modal .plan_description .ready_to_try_slack{padding:1rem 0 0}
+#plan_modal .plan_description .ready_to_try_slack form input[type=email],#plan_modal .plan_description .ready_to_try_slack form input[type=text]{width:14.25rem}
+#plan_modal .plan_preview{display:none;float:left;width:200px;height:398px}
+#plan_modal .plan_preview .plan{width:auto;height:auto;padding:1rem;margin:0 0 1rem;float:none;border-radius:10px;color:#fff;text-align:center;text-shadow:0 3px 1px rgba(0,0,0,.1)}
+#plan_modal .plan_preview .plan h3{margin-bottom:.75rem;color:#fff;font-weight:900}
+#plan_modal .plan_preview .plan h3 .brick_icon{display:inline-block;width:28px;height:36px;margin-right:7px;vertical-align:bottom;background-size:100%;background-repeat:no-repeat}
+#plan_modal .plan_preview .plan .plan_price{margin-bottom:.5rem;margin-left:-1.25rem}
+#plan_modal .plan_preview#plan_lite_preview .plan{background-color:#8a74b9}
+/*#plan_modal .plan_preview#plan_lite_preview .plan h3 .brick_icon{background-image:url(/b9ff/img/pricing/brick_lite.png);background-position:-2px -2px}*/
+#plan_modal .plan_preview#plan_lite_preview .plan .plan_lite_price_details{display:inline-block;width:6.5rem;font-size:.875rem;line-height:1rem;opacity:.8;text-shadow:none}
+#plan_modal .plan_preview#plan_standard_preview .plan{background-color:#4cb992}
+/*#plan_modal .plan_preview#plan_standard_preview .plan h3 .brick_icon{background-image:url(/b9ff/img/pricing/brick_standard.png);margin-right:11px}*/
+#plan_modal .plan_preview#plan_standard_preview .plan .plan_price{margin-left:-2.25rem}
+#plan_modal .plan_preview .preview_details{padding-left:.5rem;font-size:1rem;font-weight:500;color:#69696f}
+#plan_modal.lite #plan_lite_description,#plan_modal.lite #plan_lite_preview,#plan_modal.standard #plan_standard_description,#plan_modal.standard #plan_standard_preview{display:block}
+.new_signup{padding:3rem}
+.new_signup.top{color:#fff}
+.new_signup .section_content{width:60rem;margin:0 auto}
+.new_signup.bottom .section_content{margin:2rem auto;border:1px solid #DDD;border-radius:.5rem;padding:2.5rem 2rem 3rem}
+.new_signup p{font-size:1.5rem;line-height:2rem;max-width:600px;margin-right:3rem;padding-left:8rem;float:left}
+@media only screen and (max-width:1024px){.new_signup{text-align:center}
+    .new_signup .section_content{width:100%}
+    .new_signup p{max-width:460px;margin:0 auto 1rem;padding-left:0;float:none}
+}
+body.nav_open .common_questions_nav.fixed{-webkit-transform:translate3d(280px,0,0);-moz-transform:translate3d(280px,0,0);-ms-transform:translate3d(280px,0,0);transform:translate3d(280px,0,0)}
+@media only screen and (-webkit-min-device-pixel-ratio:2),only screen and (min-resolution:192dpi),only screen and (min-resolution:2dppx){.plan h4 i{background-image:url(/5317/img/pricing/arrow_down@2x.png)}
+    #plan_lite .brick_icon,#plan_preview.lite .plan h3 .brick_icon{background-image:url(/b9ff/img/pricing/brick_lite@2x.png)}
+    #plan_preview.standard .plan h3 .brick_icon,#plan_standard .brick_icon{background-image:url(/b9ff/img/pricing/brick_standard@2x.png)}
+    #plan_plus .brick_icon{background-image:url(/b9ff/img/pricing/brick_plus@2x.png)}
+    #plan_enterprise .brick_icon{background-image:url(/b9ff/img/pricing/brick_enterprise@2x.png)}
+}
+@media only screen and (max-width:1024px){.intro p.alert,.plan_container{width:44rem}
+    .plan{width:30%;min-width: 14rem; margin-right:.75rem}
+    .plan:last-child{margin-right:0}
+    .plan_card h3{font-size:1.375rem}
+    .plan_card.plan_card_coming_soon:after{top:4rem}
+    .plan_price{font-size:4.5rem;line-height:6rem}
+    .plan_price .currency{font-size:2.5rem}
+    .plan_subhead h3,.plan_subhead p{font-size:1.125rem}
+    #plan_modal{width:708px;margin-left:-354px}
+    #plan_modal #plan_lite_preview.plan_preview,#plan_modal #plan_standard_preview.plan_preview{display:none}
+    #plan_modal .plan_description{padding-left:3rem}
+}
+@media only screen and (max-width:767px){.intro{height:auto;margin-bottom:2rem;padding-left:2rem;padding-right:2rem}
+    .intro p.alert{width:100%}
+    .plans{padding-bottom:1rem}
+    .plan_container{width:100%;padding-top:2rem}
+    .plan{width:100%;margin:0 0 2rem;padding:0 2rem 0 15rem;float:none;overflow:hidden}
+    .plan_card{ width: 11rem;margin-left:-13rem;float:left}
+    .plan_card h3{font-size:1.5rem}
+    .plan_subhead{margin-top:0}
+    .fair_billing_policy,.from_the_wall_of_love,.happy_customers,.need_a_hand,.nonprofit_pricing,.our_pricing_perspective,.ready_to_try_slack{padding:2rem 0}
+    .fair_billing_policy .section_content,.from_the_wall_of_love .section_content,.happy_customers .section_content,.need_a_hand .section_content,.nonprofit_pricing .section_content,.our_pricing_perspective .section_content,.ready_to_try_slack .section_content{padding:0 3rem}
+    .fair_billing_policy .section_content h3,.from_the_wall_of_love .section_content h3,.happy_customers .section_content h3,.need_a_hand .section_content h3,.nonprofit_pricing .section_content h3,.our_pricing_perspective .section_content h3,.ready_to_try_slack .section_content h3{font-size:1.875rem}
+    .ready_to_try_slack .section_content{width:20.5rem;padding:0}
+    .ready_to_try_slack .section_content form input[type=email],.ready_to_try_slack .section_content form input[type=text],.ready_to_try_slack .section_content form input[type=submit]{display:block;width:20.5rem;margin-bottom:.375rem}
+    .ready_to_try_slack.bottom{padding-top:6rem}
+    .from_the_wall_of_love h3 .ts_icon_heart_o{display:none}
+    .from_the_wall_of_love .tweet_carousel_container{width:100%;margin:2rem 0}
+    .from_the_wall_of_love .tweet_carousel_container .tweet_carousel{margin-left:0}
+    .from_the_wall_of_love .tweet_carousel_container .tweet_carousel li{float:none;max-width:500px;margin-right:auto;margin-left:auto}
+    .from_the_wall_of_love .tweet_carousel_container .tweet_carousel li:nth-of-type(1n+4){display:none}
+    .happy_customers .section_content .customer_logos{width:100%;max-width:500px;height:8.75rem;margin:0 auto 2rem;background-size:100%;background-image:url(/ba99e/img/pricing/customers_small.png)}
+    .fair_billing_policy,.need_a_hand,.nonprofit_pricing,.our_pricing_perspective{padding-top:0}
+    .fair_billing_policy .section_content,.need_a_hand .section_content,.nonprofit_pricing .section_content,.our_pricing_perspective .section_content{padding-top:21rem;background-position:center top 0}
+    .fair_billing_policy .section_content{padding-top:19rem;background-position:center top 1rem}
+    .nonprofit_pricing .section_content{padding-top:16.5rem}
+    .need_a_hand .section_content{padding-top:12.5rem;background-position:center top 1.5rem}
+    .common_questions_and_resources{padding-top:4rem}
+    .common_questions_and_resources h2{margin-bottom:5rem;font-size:3rem}
+    .common_questions_and_resources h3{font-size:1.875rem}
+    .common_questions_and_resources .question_category{margin-bottom:5rem}
+    #plan_modal{width:96%;margin-left:-48%}
+    #plan_modal.modal.fade.in{top:0}
+    #plan_modal .modal-body{height:auto}
+    #plan_modal .plan_sentence{font-size:1.5rem;line-height:1.75rem}
+    #plan_modal .plan_description{width:100%;padding-left:2rem;padding-right:2rem}
+    #plan_modal .plan_description .ready_to_try_slack{width:20.5rem;margin:0 auto}
+    #plan_modal .plan_description .ready_to_try_slack form input[type=email],#plan_modal .plan_description .ready_to_try_slack form input[type=text],#plan_modal .plan_description .ready_to_try_slack form input[type=submit]{display:block;width:100%;margin-bottom:.375rem}
+}
+@media only screen and (max-width:512px){.plan{padding:0 2rem}
+    .plan_card{width:100%;margin-left:0;float:none}
+    .plan_card.plan_card_coming_soon:after{top:3.75rem}
+    .plan_price{font-size:6.5rem;line-height:6rem}
+    .plan_price .currency{font-size:3rem}
+    .plan_subhead{margin-top:1.375rem}
+}
+@media only screen and (max-width:480px){#plan_modal{margin-left:2%}
+    #plan_modal .modal-body{height:100%;overflow:scroll}
+    #plan_modal .plan_description{width:100%;padding-left:1rem;padding-right:1rem}
+    #plan_modal .plan_description .ready_to_try_slack{width:19.5rem}
+}
+@media only screen and (max-width:414px){.intro h1{font-size:2.5rem}
+    .intro h2{font-size:1.25rem;line-height:1.625rem}
+    .fair_billing_policy .section_content,.from_the_wall_of_love .section_content,.happy_customers .section_content,.need_a_hand .section_content,.nonprofit_pricing .section_content,.our_pricing_perspective .section_content,.ready_to_try_slack .section_content{padding-left:2rem;padding-right:2rem}
+    .fair_billing_policy .section_content p,.from_the_wall_of_love .section_content p,.happy_customers .section_content p,.need_a_hand .section_content p,.nonprofit_pricing .section_content p,.our_pricing_perspective .section_content p,.ready_to_try_slack .section_content p{font-size:1.125rem;line-height:1.625rem}
+    .ready_to_try_slack .section_content{padding:0}
+    .happy_customers .section_content .customer_logos{height:6.5rem}
+    .common_questions_and_resources{padding-top:2rem}
+    .common_questions_and_resources .section_content{padding-left:2rem;padding-right:2rem}
+    .common_questions_and_resources h2{margin-bottom:4rem;font-size:2.5rem;line-height:3rem}
+    .common_questions_and_resources h3{font-size:1.875rem}
+    .common_questions_and_resources .question_category{margin-bottom:4rem}
+    .common_questions_and_resources .question_category h3{margin-bottom:1.75rem}
+    .common_questions_and_resources .question_category ul.question_list li{margin-top:1.25rem;padding-bottom:0}
+    .common_questions_and_resources .question_category ul.question_list li p{padding-right:0}
+}
+
+section.intro {
+    padding-top: 5rem;
+    height: auto;
+    margin-bottom: 12rem;
+}
+.float_none {
+    float: none!important;
+}
+.align_center {
+    text-align: center!important;
+}
+.bottom_padding {
+    padding-bottom: 1rem!important;
+}
+.btn {
+    color: #fff!important;
+    font-weight: 900;
+}
+.no_bottom_margin {
+    margin-bottom: 0!important;
+}
