@@ -27,6 +27,14 @@
         return value1;
     };
 
+    $.listener = function(fn, scope, optionalArgs) {
+        return function(e) {
+            e.preventDefault();
+
+            fn.call(scope||this, optionalArgs);
+        }
+    };
+
     /**
      * Optional extend (as opposed to jQuery's default $.extend method, which is forced)
      *
@@ -204,8 +212,9 @@
     };
 
     $.fn.disable = function (value) {
-        if ($.isUndefined(value)) {
-            return this.attr('disabled');
+        if (_.isUndefined(value)) {
+            value = true;
+            //return this.attr('disabled');
         }
 
         value = $.true(value);

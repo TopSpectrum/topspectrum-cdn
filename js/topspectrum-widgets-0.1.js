@@ -8,7 +8,11 @@ Ts.View = Backbone.View.extend({
 
     initialize: function (args) {
         $.extend(this, args);
-    }
+
+        this.onInit(args);
+    },
+
+    onInit : Ts.emptyFn
 
 });
 
