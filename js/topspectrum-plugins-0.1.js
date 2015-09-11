@@ -1,3 +1,12 @@
+
+function assert(e) {
+    if (e) {
+        console.trace();
+        throw 'should not exist: ' + e;
+    }
+}
+
+
 (function ($) {
 
     $.ensureFn = function (fn) {
@@ -203,13 +212,13 @@
         return this.on('keypress keydown keyup', $.debounce(100, $.proxy($.ensureFn(fn), $.scope(scope, this))));
     };
 
-    $.fn.class = function (clazz, value) {
-        if (value) {
-            this.addClass(clazz);
-        } else {
-            this.removeClass(clazz);
-        }
-    };
+    //$.fn.class = function (clazz, value) {
+    //    if (value) {
+    //        this.addClass(clazz);
+    //    } else {
+    //        this.removeClass(clazz);
+    //    }
+    //};
 
     $.fn.disable = function (value) {
         if (_.isUndefined(value)) {
@@ -220,7 +229,12 @@
         value = $.true(value);
 
         this.attr('disabled', value);
-        this.class('disabled', value);
+
+        if (value) {
+            this.addClass('disabled');
+        } else {
+            this.removeClass('disabled');
+        }
     };
 
     $.trueOrThrow = function (value) {
