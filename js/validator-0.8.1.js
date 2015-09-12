@@ -43,7 +43,7 @@
         this.toggleSubmit();
 
         //this.$element.on('focusin.bs.validator', $.proxy(this.onFocusIn, this));
-        this.$element.on('input.bs.validator change.bs.validator focusout.bs.validator', $.proxy(this.validateInput, this));
+        this.$element.on('input.bs.validator change.bs.validator focusin.bs.validator focusout.bs.validator', $.proxy(this.validateInput, this));
         this.$element.on('submit.bs.validator', $.proxy(this.onSubmit, this));
 
         this.$element.find('[data-match]').each(function () {
@@ -194,6 +194,10 @@
         this.options.delay = delay;
 
         return this
+    };
+
+    Validator.prototype.strict_validate = function () {
+        return this.validate(true);
     };
 
     Validator.prototype.showErrors = function ($el) {
