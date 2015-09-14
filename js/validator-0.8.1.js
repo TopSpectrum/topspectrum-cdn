@@ -151,11 +151,11 @@
                     var validatorResult = validator.call(this, $el, context);
                     var incomplete = fieldIncomplete.call($el[0]);
 
-                    console.log('validatorresult=', validatorResult, 'incomplete=', incomplete, 'key=', key);
+                    //console.log('validatorresult=', validatorResult, 'incomplete=', incomplete, 'key=', key);
 
                     if ((!causedBySubmit && incomplete))  {
                         // Ignore undefined results. Don't flag that field as bad.
-                        console.log('ignoring results')
+                        //console.log('ignoring results')
                     } else {
                         if (validatorResult) {
                             var error = getErrorMessage(key);
@@ -165,7 +165,7 @@
                 }
             }, this));
         } else {
-            console.log("We didn't ruN! ",  $el.attr('name') );
+            //console.log("We didn't ruN! ",  $el.attr('name') );
         }
 
         if (!errors.length && $el.val() && $el.data('remote')) {
