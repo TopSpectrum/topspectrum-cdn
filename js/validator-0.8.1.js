@@ -42,7 +42,6 @@
         this.$element.attr('novalidate', true); // disable automatic native validation
         this.toggleSubmit();
 
-        //this.$element.on('focusin.bs.validator', $.proxy(this.onFocusIn, this));
         this.$element.on('input.bs.validator change.bs.validator focusin.bs.validator focusout.bs.validator', $.proxy(this.validateInput, this));
         this.$element.on('submit.bs.validator', $.proxy(this.onSubmit, this));
 
@@ -84,12 +83,6 @@
             var minlength = $el.data('minlength');
             return !$el.val() || $el.val().length >= minlength;
         }
-    };
-
-    Validator.prototype.onFocusIn = function(e, context) {
-        var $el = $(e.target);
-
-        this.clearErrors($el);
     };
 
     Validator.prototype.validateInput = function (e, context) {
@@ -148,17 +141,21 @@
 
         var causedBySubmit = isStrictMode(context);
         var requiresCausedBySubmit = $el.is('[data-validator-onsubmit]');
-        //console.log('requires=', requiresCausedBySubmit, 'has=', causedBySubmit, 'context=', context);
-        //console.log(context);
+        var test = (causedBySubmit && requiresCausedBySubmit) || (!requiresCausedBySubmit);
 
-        if (!(!causedBySubmit && requiresCausedBySubmit)) {
+        if (test) {
             $.each(Validator.VALIDATORS, $.proxy(function (key, validator) {
+                //console.log($el, key);
+
                 if (($el.is('[' + key + ']')) || $el.data(key)) {
                     var validatorResult = validator.call(this, $el, context);
                     var incomplete = fieldIncomplete.call($el[0]);
 
+                    console.log('validatorresult=', validatorResult, 'incomplete=', incomplete, 'key=', key);
+
                     if ((!causedBySubmit && incomplete))  {
                         // Ignore undefined results. Don't flag that field as bad.
+                        console.log('ignoring results')
                     } else {
                         if (validatorResult) {
                             var error = getErrorMessage(key);
@@ -167,6 +164,8 @@
                     }
                 }
             }, this));
+        } else {
+            console.log("We didn't ruN! ",  $el.attr('name') );
         }
 
         if (!errors.length && $el.val() && $el.data('remote')) {
@@ -192,6 +191,12 @@
         this.options.delay = 0;
         this.$element.find(inputSelector).trigger('input.bs.validator', {submit: boolCalledViaFormSubmit});
         this.options.delay = delay;
+
+        if (this.isIncomplete() || this.hasErrors()) {
+            this.$element.addClass('has-errors');
+        } else {
+            this.$element.removeClass('has-errors');
+        }
 
         return this
     };
@@ -236,8 +241,8 @@
         $block.html($block.data('bs.validator.originalContent'));
         $group.removeClass('has-error');
 
-        $feedback.length
-            && $feedback.removeClass(this.options.feedback.error);
+        //$feedback.length
+            //&& $feedback.removeClass(this.options.feedback.error);
             //&& $feedback.addClass(this.options.feedback.success)
             //&& $group.addClass('has-success');
     };
@@ -261,12 +266,16 @@
 
     Validator.prototype.toggleSubmit = function () {
         if (!this.options.disable) return;
+
+        var state = this.isIncomplete() || this.hasErrors();
         var $btn = $('button[type="submit"], input[type="submit"]')
             .filter('[form="' + this.$element.attr('id') + '"]')
             .add(this.$element.find('input[type="submit"], button[type="submit"]'));
-        $btn.toggleClass('disabled', this.isIncomplete() || this.hasErrors())
+        $btn.toggleClass('disabled', state)
             .css({'pointer-events': 'all'});
+        this.$element.toggleClass('has-errors', state);
         //.css({'pointer-events': 'all', 'cursor': 'pointer'})
+
     };
 
     Validator.prototype.defer = function ($el, callback) {
