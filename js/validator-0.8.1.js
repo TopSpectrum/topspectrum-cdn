@@ -103,7 +103,7 @@
             .done(function (errors) {
                 $el.data('bs.validator.errors', errors);
 
-                errors.length ? self.showErrors($el) : self.clearErrors($el);
+                errors.length ? self.showErrors($el) : self._clearErrors($el);
 
                 if (!prevErrors || errors.toString() !== prevErrors.toString()) {
                     e = errors.length
@@ -233,7 +233,7 @@
         })
     };
 
-    Validator.prototype.clearErrors = function ($el) {
+    Validator.prototype._clearErrors = function ($el) {
         var $group = $el.closest('.form-group');
         var $block = $group.find('.help-block.with-errors');
         var $feedback = $group.find('.form-control-feedback');
@@ -241,10 +241,10 @@
         $block.html($block.data('bs.validator.originalContent'));
         $group.removeClass('has-error');
 
-        //$feedback.length
-            //&& $feedback.removeClass(this.options.feedback.error);
-            //&& $feedback.addClass(this.options.feedback.success)
-            //&& $group.addClass('has-success');
+        //    $feedback.length
+        //        && $feedback.removeClass(this.options.feedback.error)
+        //        && $feedback.addClass(this.options.feedback.success)
+        //        && $group.addClass('has-success');
     };
 
     Validator.prototype.hasErrors = function () {
@@ -253,6 +253,16 @@
         }
 
         return !!this.$element.find(inputSelector).filter(fieldErrors).length;
+    };
+
+    Validator.prototype.clearErrors = function () {
+        function fieldErrors() {
+            return !!($(this).data('bs.validator.errors') || []).length;
+        }
+
+        return !!this.$element.find(inputSelector).filter(fieldErrors).each($.proxy(function() {
+            this.clearErrors($(this));
+        }, this));
     };
 
     Validator.prototype.isIncomplete = function () {
@@ -267,13 +277,17 @@
     Validator.prototype.toggleSubmit = function () {
         if (!this.options.disable) return;
 
-        var state = this.isIncomplete() || this.hasErrors();
+        var i = this.isIncomplete();
+        var e = this.hasErrors();
+        var state = i || e;
         var $btn = $('button[type="submit"], input[type="submit"]')
             .filter('[form="' + this.$element.attr('id') + '"]')
             .add(this.$element.find('input[type="submit"], button[type="submit"]'));
         $btn.toggleClass('disabled', state)
             .css({'pointer-events': 'all'});
-        this.$element.toggleClass('has-errors', state);
+
+        this.$element.toggleClass('has-errors', e);
+        this.$element.toggleClass('has-incomplete', i);
         //.css({'pointer-events': 'all', 'cursor': 'pointer'})
 
     };
