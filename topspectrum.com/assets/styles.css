@@ -267,13 +267,13 @@ body {
     color: white;
 }
 
-h1, h2, h3 {
+h1, h2, h3, .h1 {
     line-height: 1.4em;
     font-weight: 300;
     margin: 0;
 }
 
-h1 {
+h1, .h1 {
     font-size: 2.83333em;
 }
 
@@ -2146,4 +2146,27 @@ html.touch .toggle.tap .x, html.touch .toggle.tap .y {
 html.touch .links a.tap {
     background-color: #d92400;
     color: white;
+}
+
+
+.typed-cursor{
+    opacity: 1;
+    -webkit-animation: blink 0.7s infinite;
+    -moz-animation: blink 0.7s infinite;
+    animation: blink 0.7s infinite;
+}
+@keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+@-webkit-keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+@-moz-keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
 }

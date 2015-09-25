@@ -78,7 +78,7 @@
 
         <li class="layer" data-depth="0.20" style="z-index: 99999;">
             <div class="title-wrap">
-                <h1 class="title">Top Level<em> Spectrum</em></h1>
+                <h1 class="title"><span>Top Level<em> Spectrum</em></span></h1>
 
                 <ul style="font-size: 1.2em;">
                     <li><a href="//nic.feedback">.feedback</a></li>
@@ -141,6 +141,20 @@
 
     // Pretty simple huh?
     $scene.parallax();
+
+    $(document).on('ready', function() {
+        $(".title span").typed({
+            strings: ['Top Level Spectrum\^2000', 'uber<em>.feedback</em>', 'seattle<em>.realty</em>', 'bitcoin<em>.forum</em>', 'michael.<em>contact</em>', 'Top Level Spectrum', 'Top Level <em>Spectrum</em>'],
+
+            typeSpeed: 20,
+            backSpeed: 0,
+            callback: function() {
+                setTimeout(function(){
+                    $('.typed-cursor').remove();
+                }, 1000);
+            }
+        });
+    });
 
 </script>
 
