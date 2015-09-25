@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html class="mouse" data-ember-extension="1">
+<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
@@ -16,7 +16,10 @@
     <meta name="author" content="Top Level Spectrum">
     <meta name="description"
           content="Top Level Spectrum">
-    <meta name="keywords" content="tld,feedback,forum,realty,contact,pid,gtld">
+    <meta name="keywords" content="gtld,tld,feedback,forum,realty,contact,pid,gtld">
+
+    <!-- Humans -->
+    <link rel="author" href="./humans.txt" />
 
     <!-- Open Graph Meta Data -->
     <meta property="og:description"
@@ -39,146 +42,107 @@
     <!-- Styles -->
     <link rel="stylesheet" type="text/css" href="./assets/styles.css">
 </head>
+
 <body>
-    <div id="container" class="wrapper">
-        <ul id="scene" class="scene unselectable"
-            data-friction-x="0.1"
-            data-friction-y="0.1"
-            data-scalar-x="25"
-            data-scalar-y="15">
 
-            <li class="layer" data-depth="0.10">
-                <div class="background"></div>
-            </li>
+<div id="container" class="wrapper">
+    <ul id="scene" class="scene unselectable"
+        data-friction-x="0.1"
+        data-friction-y="0.1"
+        data-scalar-x="25"
+        data-scalar-y="15">
 
-            <li class="layer" data-depth="0.30">
-                <div class="wave paint depth-30"></div>
-            </li>
-            <li class="layer" data-depth="0.40">
-                <div class="wave plain depth-40"></div>
-            </li>
-            <li class="layer" data-depth="0.50">
-                <div class="wave paint depth-50"></div>
-            </li>
+        <li class="layer" data-depth="0.10">
+            <div class="background"></div>
+        </li>
 
-            <li class="layer" data-depth="0.60">
-                <div class="wave plain depth-60"></div>
-            </li>
-            <li class="layer" data-depth="0.80">
-                <div class="wave plain depth-80"></div>
-            </li>
-            <li class="layer" data-depth="1.00">
-                <div class="wave paint depth-100"></div>
-            </li>
+        <li class="layer" data-depth="0.30">
+            <div class="wave paint depth-30"></div>
+        </li>
+        <li class="layer" data-depth="0.40">
+            <div class="wave plain depth-40"></div>
+        </li>
+        <li class="layer" data-depth="0.50">
+            <div class="wave paint depth-50"></div>
+        </li>
 
-            <li class="layer" data-depth="0.20" style="z-index: 99999;">
-                <div class="title-wrap">
-                    <h1 class="title">Top Level<em> Spectrum</em></h1>
+        <li class="layer" data-depth="0.60">
+            <div class="wave plain depth-60"></div>
+        </li>
+        <li class="layer" data-depth="0.80">
+            <div class="wave plain depth-80"></div>
+        </li>
+        <li class="layer" data-depth="1.00">
+            <div class="wave paint depth-100"></div>
+        </li>
 
-                    <ul style="font-size: 1.2em;">
-                        <li><a href="//nic.feedback">.feedback</a></li>
-                        <li><a href="//nic.forum">.forum</a></li>
-                        <li><a href="//nic.realty">.realty</a></li>
-                        <li><a href="//nic.pid" class="disabled">.pid</a></li>
-                        <li><a href="//nic.contact" class="disabled">.contact</a></li>
-                    </ul>
+        <li class="layer" data-depth="0.20" style="z-index: 99999;">
+            <div class="title-wrap">
+                <h1 class="title">Top Level<em> Spectrum</em></h1>
+
+                <ul style="font-size: 1.2em;">
+                    <li><a href="//nic.feedback">.feedback</a></li>
+                    <li><a href="//nic.forum">.forum</a></li>
+                    <li><a href="//nic.realty">.realty</a></li>
+                    <li><a href="//nic.pid" class="disabled">.pid</a></li>
+                    <li><a href="//nic.contact" class="disabled">.contact</a></li>
+                </ul>
+            </div>
+        </li>
+
+        <li class="layer" data-depth="0.02">
+            <div style="position: absolute; bottom: 20px; width: 100%; color: rgba(245,245,245, .8);">
+                <div class="center">
+                    Changing the way we think about domain names.
                 </div>
-            </li>
+            </div>
+        </li>
+    </ul>
+</div>
 
-            <li class="layer" data-depth="0.02">
-                <div style="position: absolute; bottom: 20px; width: 100%; color: rgba(245,245,245, .8);">
-                    <div class="center">
-                        Changing the way we think about domain names.
-                    </div>
-                </div>
-            </li>
-        </ul>
-    </div>
+<!-- Scripts -->
+<script src="./assets/libraries.min.js"></script>
+<script src="./assets/jquery.parallax.js"></script>
+<script>
 
-    <!-- Scripts -->
-    <script src="./assets/libraries.min.js"></script>
-    <script src="./assets/jquery.parallax.js"></script>
-    <script>
+    // jQuery Selections
+    var $html = $('html'),
+            $container = $('#container'),
+            $scene = $('#scene');
 
-        // jQuery Selections
-        var $html = $('html'),
-                $container = $('#container'),
-                $prompt = $('#prompt'),
-                $toggle = $('#toggle'),
-                $about = $('#about'),
-                $scene = $('#scene');
-
-        // Hide browser menu.
-        (function () {
-            setTimeout(function () {
-                window.scrollTo(0, 0);
-            }, 0);
-        })();
-
-        // Setup FastClick.
-        FastClick.attach(document.body);
-
-        // Add touch functionality.
-        if (Hammer.HAS_TOUCHEVENTS) {
-            $container.hammer({drag_lock_to_axis: true});
-            _.tap($html, 'a,button,[data-tap]');
-        }
-
-        // Add touch or mouse class to html element.
-        $html.addClass(Hammer.HAS_TOUCHEVENTS ? 'touch' : 'mouse');
-
-        // Resize handler.
-        (resize = function () {
-            $scene[0].style.width = window.innerWidth + 'px';
-            $scene[0].style.height = window.innerHeight + 'px';
-            if (!$prompt.hasClass('hide')) {
-                if (window.innerWidth < 600) {
-                    $toggle.addClass('hide');
-                } else {
-                    $toggle.removeClass('hide');
-                }
-            }
-        })();
-
-        // Attach window listeners.
-        window.onresize = _.debounce(resize, 200);
-        window.onscroll = _.debounce(resize, 200);
-
-        function showDetails() {
-            $about.removeClass('hide');
-            $toggle.removeClass('i');
-        }
-
-        function hideDetails() {
-            $about.addClass('hide');
-            $toggle.addClass('i');
-        }
-
-        // Listen for toggle click event.
-        $toggle.on('click', function (event) {
-            $toggle.hasClass('i') ? showDetails() : hideDetails();
-        });
-
-        // Pretty simple huh?
-        $scene.parallax();
-
-        // Check for orientation support.
+    // Hide browser menu.
+    (function () {
         setTimeout(function () {
-            if ($scene.data('mode') === 'cursor') {
-                $prompt.removeClass('hide');
-                if (window.innerWidth < 600) $toggle.addClass('hide');
-                $prompt.on('click', function (event) {
-                    $prompt.addClass('hide');
-                    if (window.innerWidth < 600) {
-                        setTimeout(function () {
-                            $toggle.removeClass('hide');
-                        }, 1200);
-                    }
-                });
-            }
-        }, 1000);
+            window.scrollTo(0, 0);
+        }, 0);
+    })();
 
-    </script>
+    // Setup FastClick.
+    FastClick.attach(document.body);
 
-    </body>
+    // Add touch functionality.
+    if (Hammer.HAS_TOUCHEVENTS) {
+        $container.hammer({drag_lock_to_axis: true});
+        _.tap($html, 'a,button,[data-tap]');
+    }
+
+    // Add touch or mouse class to html element.
+    $html.addClass(Hammer.HAS_TOUCHEVENTS ? 'touch' : 'mouse');
+
+    // Resize handler.
+    (resize = function () {
+        $scene[0].style.width = window.innerWidth + 'px';
+        $scene[0].style.height = window.innerHeight + 'px';
+    })();
+
+    // Attach window listeners.
+    window.onresize = _.debounce(resize, 200);
+    window.onscroll = _.debounce(resize, 200);
+
+    // Pretty simple huh?
+    $scene.parallax();
+
+</script>
+
+</body>
 </html>
