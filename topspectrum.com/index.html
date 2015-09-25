@@ -83,10 +83,10 @@
 
                 <ul style="font-size: 1.2em;">
                     <li><a href="//nic.feedback">.feedback</a></li>
-                    <li><a href="//nic.forum">.forum</a></li>
                     <li><a href="//nic.realty">.realty</a></li>
-                    <li><a href="//nic.pid" class="disabled">.pid</a></li>
+                    <li><a href="//nic.forum">.forum</a></li>
                     <li><a href="//nic.contact" class="disabled">.contact</a></li>
+                    <li><a href="//nic.pid" class="disabled">.pid</a></li>
                 </ul>
             </div>
         </li>
@@ -155,7 +155,15 @@
                 }, 1000);
             }
         });
+
+        $('a.disabled').click(function(e) {
+            e.preventDefault();
+            return false;
+        });
+
     });
+
+
 
 </script>
 

@@ -1181,7 +1181,7 @@ a.disabled, a.disabled:hover, a.disabled:active, a.disabled:focus {
     }
 
     .background {
-        bottom: 96px;
+        bottom: 50px;
     }
 
     .wave.depth-10 {
@@ -1697,10 +1697,21 @@ a.disabled, a.disabled:hover, a.disabled:active, a.disabled:focus {
 
 }
 
-@media all and (max-height: 900px) and (max-width: 900px) {
+@media all and (max-height: 900px) and (min-width: 900px) {
     .background {
         background-position: center;
-        /*bottom: inherit;*/
+        /*-webkit-background-size: contain;*/
+        /*background-size: 60%;*/
+        bottom: 60px;
+    }
+}
+
+@media all and (min-width: 1700px) {
+    .background {
+        /*background-position: center;*/
+        /*-webkit-background-size: contain;*/
+        /*background-size: 60%;*/
+        /*bottom: 0px;*/
     }
 }
 
