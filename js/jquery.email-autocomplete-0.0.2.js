@@ -33,7 +33,7 @@
             }
 
             //get input padding,border and margin to offset text
-            this.fieldLeftOffset = (this.$field.outerWidth(true) - this.$field.width()) / 2;
+            this.fieldLeftOffset = (this.$field.outerWidth(true) - this.$field.width()) / 4;
 
             //wrap our field
             var $wrap = $("<div class='eac-input-wrap' />").css({
@@ -139,7 +139,7 @@
             this.$cval.text(this.val);
 
             //find width of current input val so we can offset the suggestion text
-            var cvalWidth = this.$cval.width() + 14; // hack to adjust?
+            var cvalWidth = this.$cval.width();
 
             if(this.$field.outerWidth() > cvalWidth){
                 //offset our suggestion container
