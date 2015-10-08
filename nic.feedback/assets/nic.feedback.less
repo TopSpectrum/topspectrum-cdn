@@ -130,6 +130,8 @@
 
 /* END FONTS */
 
+@blue: #4d9de0;
+
 html {
   height: 100%;
   width: 100%;
@@ -185,6 +187,13 @@ html, button, input, select, textarea {
   line-height: 1.375rem;
 }
 
+.shadow-text {
+  letter-spacing: -.1rem;
+  text-transform: none;
+  font-family: 'Gotham SSm A', 'Gotham SSm B', Helvetica, Arial, sans-serif;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, .3);;
+}
+
 .navbar-brand {
   color: white;
   font-size: 2.1rem;
@@ -220,7 +229,7 @@ h1 {
 .section-headline {
   font-size: 3.25rem;
   line-height: 1.2;
-  color: #4d9de0;
+  color: @blue;
   text-align: center;
   font-family: 'Gotham SSm A', 'Gotham SSm B', Helvetica, Arial, sans-serif;
   font-weight: 500;
@@ -233,7 +242,7 @@ h3.section-headline {
 }
 
 .home-hero {
-  background: #4d9de0;
+  background: @blue;
   padding: 137px 0 0 0;
   position: relative;
   overflow: hidden;
@@ -246,6 +255,7 @@ h3.section-headline {
 
 .home-hero-top {
   flex: 1;
+
 }
 
 .home-hero-bottom {
@@ -282,7 +292,7 @@ h3.section-headline {
   }
 }
 
-.home-hero p {
+.home-hero-top p {
   font-family: 'Gotham SSm A', 'Gotham SSm B', Helvetica, Arial, sans-serif;
   font-weight: 300;
   font-style: normal;
@@ -566,4 +576,147 @@ footer {
     margin-top: 10px;
     line-height: normal;
   }
+}
+
+.module-featured-customer {
+
+  height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .photo {
+    position: absolute;
+    z-index: 1;
+    height: 100%;
+    bottom: 0;
+    top: 0;
+    right: -100px;
+  }
+
+  .content {
+    max-width: 670px;
+    width: 53%;
+    position: relative;
+    z-index: 2;
+    text-align: left;
+
+    @media @media-xs-atmost {
+      width: 100%;
+      text-align: center;
+    }
+  }
+
+  h2 {
+    font-size: 1.125rem;
+    color: @blue;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    font-family: 'Gotham SSm A', 'Gotham SSm B', Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+
+  .author {
+    font-size: 1.125rem;
+    margin-top: 40px;
+    color: @blue;
+    line-height: 1.4;
+    text-transform: uppercase;
+    font-family: 'Gotham SSm A', 'Gotham SSm B', Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+  }
+
+  .desc {
+    position: relative;
+    font-size: 1.625rem;
+    color: #757575;
+    line-height: 1.6;
+    margin-top: 40px;
+    font-family: 'Gotham SSm A', 'Gotham SSm B', Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    font-style: normal;
+    letter-spacing: -.02em;
+  }
+
+  .desc:before, .desc:after {
+    content: '“';
+    position: absolute;
+    top: -14px;
+    left: -26px;
+    font-size: 2.8125rem;
+    color: @blue;
+    font-family: 'Gotham Rounded SSm A', 'Gotham Rounded SSm B', Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    font-style: normal;
+    letter-spacing: -0.01em;
+  }
+
+  .desc:after {
+    content: '”';
+    left: auto;
+    top: auto;
+    margin-top: -12px;
+    margin-left: 1px;
+  }
+
+  @media @media-md-atmost {
+    height: 400px;
+
+    .photo {
+      right: -50px;
+    }
+    .desc {
+      font-size: 1.3rem;
+    }
+  }
+
+  @media @media-sm-atmost {
+    height: 400px;
+
+    .photo {
+      right: -150px;
+    }
+    .desc-wrap, .desc {
+      font-size: 1.2rem;
+      line-height: 1.6;
+    }
+  }
+
+  @media @media-xs-atmost {
+    height: inherit;
+
+    .photo {
+      display:none;
+    }
+  }
+}
+
+.module-customers {
+  border-top: 1px solid #d9e5f0;
+  background: #f9fcff;
+  text-align: center;
+  padding: 80px 0;
+  color: @blue;
+}
+
+.eac-sugg {
+  color: lighten(#757575, 30%)
+}
+.nowrap {
+  white-space:nowrap;
+}
+
+.hidden-unless-error {
+  display:none;
+}
+.has-error .hidden-unless-error {
+  display:block;
+}
+
+.has-error a {
+  color: #a94442;
+  font-weight: bold;
+  text-decoration: underline;
 }
