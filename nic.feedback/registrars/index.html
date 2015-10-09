@@ -46,6 +46,7 @@
     <link rel="stylesheet" type="text/css" href="//cdn.feedback/css/bootstrap-tls-0.1.css">
     <link rel="stylesheet" type="text/css" href="../assets/nic.feedback.css">
     <link rel="stylesheet" type="text/css" href="//cdn.feedback/js/typed.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.feedback/js/ladda-0.9.7.min.css">
 </head>
 
 <body>
@@ -222,7 +223,7 @@
 
                         <div class="row" style="margin-top: 20px;">
                             <div class="col-sm-12">
-                                <button type="submit" class="btn btn-default">Submit</button>
+                                <button type="submit" class="btn btn-default ladda-button" data-color="blue" data-style="slide-left">Submit</button>
                             </div>
                         </div>
                     </form>
@@ -270,6 +271,10 @@
 <script type="application/javascript" src="//cdn.feedback/js/jquery-1.11.2.js"></script>
 <script type="application/javascript" src="//cdn.feedback/js/validator-0.8.0.js"></script>
 <script type="application/javascript" src="//cdn.feedback/js/bootstrap-3.3.5.js"></script>
+<script type="application/javascript" src="//cdn.feedback/js/spin.min.js"></script>
+<script type="application/javascript" src="//cdn.feedback/js/ladda-0.9.7.js"></script>
+<script type="application/javascript" src="//cdn.feedback/js/underscore-1.8.3.min.js"></script>
+<script type="application/javascript" src="//cdn.feedback/js/topspectrum-plugins-0.1.js"></script>
 
 <script src="//cdn.feedback/js/jquery.email-autocomplete-0.0.2.js"></script>
 <link rel="stylesheet" href="//cdn.feedback/js/intl-tel-input/6.0.8/intlTelInput.css"/>
@@ -324,6 +329,30 @@
 <script type="application/javascript">
 
     $(document).ready(function () {
+
+        var $form = $('form');
+
+        $form.validator().on('submit', function(e) {
+            if (e.isDefaultPrevented()) {
+                return;
+            }
+
+            e.preventDefault();
+
+            var ladda = Ladda.create($(this).find('button[type=submit]')[0]);
+
+            ladda.start();
+
+            $.ajax($.formAjaxArgs($form)).done(function() {
+                $('.module-customers').html('<div class="container"><h1 class="shadow-text">Your application was submitted.</h1></div>');
+                ladda.stop();
+            }).fail(function() {
+                alert('There was an issue submitting the application. Please try again later.');
+            });
+
+
+        });
+
         function render(item, escape) {
             return '<div class="">' +
                     '<div class="flag" style="display:inline-block; margin-right: 6px; vertical-align: middle;"><div class="iti-flag ' + item.code.toLowerCase() + '"></div></div>' +
