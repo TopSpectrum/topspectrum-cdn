@@ -207,7 +207,7 @@ h3.section-headline {
 }
 .home-hero {
   background: #4d9de0;
-  padding: 137px 0 0 0;
+  padding: 0;
   position: relative;
   overflow: hidden;
   color: #d5eafb;
@@ -247,8 +247,7 @@ h3.section-headline {
     font-size: 2.5rem;
   }
 }
-
-.home-hero-top .hero-top-paragraph {
+.home-hero-top p {
   font-family: 'Gotham SSm A', 'Gotham SSm B', Helvetica, Arial, sans-serif;
   font-weight: 300;
   font-style: normal;
@@ -620,4 +619,7 @@ footer .legal {
   color: #a94442;
   font-weight: bold;
   text-decoration: underline;
+}
+.navbar-toggle .icon-bar {
+  background-color: white;
 }
