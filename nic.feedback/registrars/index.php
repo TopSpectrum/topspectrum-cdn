@@ -4,6 +4,7 @@
 
 <?php include("../shared/header.html"); ?>
 
+
 <body>
 
 <section class="home-hero">
@@ -82,7 +83,7 @@
                 <h1 class="shadow-text" style="margin-bottom: 5rem; text-align: left;">Apply to carry .feedback</h1>
 
                 <div class="row" style="text-align: left;">
-                    <form class="col-sm-12" data-toggle="validator" autocomplete="off" method="POST" action="/registrars_apply">
+                    <form class="col-sm-12" data-toggle="validator" autocomplete="off" method="POST" action="/contact/email.php">
                         <input type="hidden" id="registrar-name" name="registrar-name" value="" />
 
                         <div class="row">
@@ -192,7 +193,7 @@
     <div class="home-hero-bottom" style="">
         <div class="module-customer-logos" style="">
 
-           <?php include("shared/footer.html"); ?>
+           <?php include("../shared/footer.html"); ?>
 
         </div>
     </div>

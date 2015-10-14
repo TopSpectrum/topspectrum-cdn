@@ -144,7 +144,7 @@
     </div>
 </section>
 
-<?php include("shared/header.html"); ?>
+<?php include("shared/footer.html"); ?>
 
 <script type="application/javascript" src="//cdn.feedback/js/jquery-1.11.2.js"></script>
 <script type="application/javascript" src="//cdn.feedback/js/bootstrap-3.3.5.js"></script>

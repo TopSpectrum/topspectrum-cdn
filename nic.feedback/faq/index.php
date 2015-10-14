@@ -62,7 +62,7 @@
     <div class="home-hero-bottom" style="">
         <div class="module-customer-logos" style="">
 
-            <?php include("shared/footer.html"); ?>
+            <?php include("../shared/footer.html"); ?>
 
         </div>
     </div>
