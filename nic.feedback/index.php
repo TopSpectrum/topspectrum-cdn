@@ -67,7 +67,7 @@
                         <div class="timeline-content">
                             <h2 class="text-title">Sunrise</h2>
                             <p class="text-subtitle">Trademark holder exclusive</p>
-                            <span class="text-date">Oct 14 - Dec 29 <em>(1400 UTC)</em></span>
+                            <span class="text-date">Oct 20 - Jan 6 <em>(1400 UTC)</em></span>
                         </div>
                     </div>
 
