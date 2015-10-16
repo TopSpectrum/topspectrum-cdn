@@ -2,7 +2,7 @@
 
 <html>
 
-<?php include("../shared/header.html"); ?>
+<?php include("../shared/header.php"); ?>
 
 
 <body>

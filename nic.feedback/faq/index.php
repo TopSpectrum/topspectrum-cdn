@@ -2,7 +2,7 @@
 
 <html>
 
-<?php include("../shared/header.html"); ?>
+<?php include("../shared/header.php"); ?>
 
 <body>
 
@@ -50,7 +50,7 @@
                     <div class="panel-body" style="color: black;">
                         <section id="module-faq" class="module-contact text-inverse">
                             <ul>
-                                <li>asdf</li>
+                                <li>Jay was here</li>
                             </ul>
                         </section>
                     </div>
