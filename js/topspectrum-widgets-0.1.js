@@ -6,14 +6,66 @@ Ts.View = Backbone.View.extend({
 
     $el : null,
 
+    /**
+     * The "events" hash is a clusterfuck. As far as I can tell, Backbone fucked up here.
+     * If a guy creates a new View() and provides their own "events" object, it clobbers/destroys the class
+     * definition's events hash. After searching online, a recommendation is to create a "listeners" object
+     * that instantiations can use. Inheritance chains use "events" while instances use "listeners"
+     *
+     * @type Object
+     */
+    listeners: null,
+
+    /**
+     * If you want to require an instance to declare these objects. Ex: ['thiz', 'that', 'another'];
+     *
+     * @type Array
+     */
+    requiredOptions: null,
+
     initialize: function (args) {
-        $.extend(this, args);
+        if (args) {
+            if (this.listeners && args.listeners) {
+                args.listeners = _.extend({}, this.listeners, args.listeners);
+            }
+
+            $.extend(this, args);
+        }
+
+        if (this.listeners) {
+            _.each(this.listeners, function(method, eventName) {
+                if (!_.isFunction(method)) {
+                    method = this[method];
+
+                    if (!_.isFunction(method)) {
+                        return;
+                    }
+                }
+
+                this.listenTo(this, eventName, method);
+            }, this);
+        }
+
+        if (this.requiredOptions) {
+            _.each(this.requiredOptions, function(value) {
+                if (_.isUndefined(this[value])) {
+                    throw 'Param option ' + value + ' is required and was not passed in.';
+                }
+            }, this);
+        }
 
         this._initialize(args);
     },
 
     _initialize : Ts.emptyFn
 
+}, {
+    extend: function(child) {
+        var view = Backbone.View.extend.apply(this, arguments);
+        view.prototype.listeners = _.extend({}, this.prototype.listeners, child.listeners);
+        view.prototype.events = _.extend({}, this.prototype.events, child.events);
+        return view;
+    }
 });
 
 /**
