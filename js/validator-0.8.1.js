@@ -145,19 +145,14 @@
 
         if (test) {
             $.each(Validator.VALIDATORS, $.proxy(function (key, validator) {
-                //console.log($el, key);
-
                 if (($el.is('[' + key + ']')) || $el.data(key)) {
-                    var validatorResult = validator.call(this, $el, context);
+                    var passesValidation = validator.call(this, $el, context);
                     var incomplete = fieldIncomplete.call($el[0]);
-
-                    //console.log('validatorresult=', validatorResult, 'incomplete=', incomplete, 'key=', key);
 
                     if ((!causedBySubmit && incomplete))  {
                         // Ignore undefined results. Don't flag that field as bad.
-                        //console.log('ignoring results')
                     } else {
-                        if (validatorResult) {
+                        if (!passesValidation) {
                             var error = getErrorMessage(key);
                             !~errors.indexOf(error) && errors.push(error);
                         }
