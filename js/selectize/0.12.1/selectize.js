@@ -2822,10 +2822,10 @@
 	
 				var $control = self.$control.sortable({
 					items: '[data-value]',
-					forcePlaceholderSize: true,
+					forcePlaceholderSize: false, // Changed because CSS not always available
 					disabled: self.isLocked,
 					start: function(e, ui) {
-						ui.placeholder.css('width', ui.helper.css('width'));
+						//ui.placeholder.css('width', ui.helper.css('width')); // Removed because CSS not always available
 						$control.css({overflow: 'visible'});
 					},
 					stop: function() {
@@ -2841,12 +2841,11 @@
 				});
 			};
 		})();
-	
 	});
 	
 	Selectize.define('dropdown_header', function(options) {
 		var self = this;
-	
+
 		options = $.extend({
 			title         : 'Untitled',
 			headerClass   : 'selectize-dropdown-header',
