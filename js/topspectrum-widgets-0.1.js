@@ -23,7 +23,19 @@ Ts.View = Backbone.View.extend({
      */
     requiredOptions: null,
 
+    rendered: false,
+
+    items: null,
+    plugins: null,
+
     initialize: function (args) {
+        this.beforeInitialize(args);
+        this._initialize(args);
+        this.afterInitialize(args);
+        return this;
+    },
+
+    beforeInitialize: function(args) {
         if (args) {
             if (this.listeners && args.listeners) {
                 args.listeners = _.extend({}, this.listeners, args.listeners);
@@ -54,10 +66,97 @@ Ts.View = Backbone.View.extend({
             }, this);
         }
 
-        this._initialize(args);
+        // The args/config are already applied to us on lines above.
+        $.applyIf(this, {
+            items: [],
+            plugins: []
+        });
+
+        // We need to init the plugins.
+        _.each(this.plugins, function(plugin) {
+            plugin.init(this);
+        }, this);
+
+        return this;
     },
 
-    _initialize : Ts.emptyFn
+    afterInitialize: function() {
+        this.render = _.wrap(this.render, function(render) {
+            this.beforeRender();
+            render.call(this);
+            this.afterRender();
+        }, this);
+
+        // We need to init the plugins.
+        _.each(this.plugins, function(plugin) {
+            plugin.start();
+        }, this);
+
+        this.trigger('initialized');
+        return this;
+    },
+
+    // private method for you to sneak in your init
+    _initialize : Ts.emptyFn,
+
+    beforeRender: function() {
+        this.trigger('beforeRender');
+    },
+
+    assignView : function(view, selector) {
+        view.setElement(this.$(selector)).render();
+    },
+
+    renderedEl: function() {
+        if (!this.rendered) {
+            this.render();
+        }
+
+        return this.$el;
+    },
+
+    afterRender: function() {
+        this.rendered = true;
+        this.trigger('afterRender');
+    },
+
+    isAttached: function() {
+        if (!this.$el) {
+            return false;
+        }
+
+        return 0 !== this.$el.parent().length;
+    },
+
+    remove: function() {
+        this.undelegateEvents();
+
+        if (this.items) {
+            _.each(this.items, function(subview) {
+                if (subview && _.isFunction(subview.remove)) {
+                    subview.remove.apply(subview, arguments);
+                }
+            });
+            delete this.items;
+        }
+
+        if (this.plugins) {
+            _.each(this.plugins, function(plugin) {
+                plugin.destroy();
+            }, this);
+            delete this.plugins;
+        }
+
+        // This will call stopListening()
+        Backbone.View.prototype.remove.apply(this, arguments);
+
+        this.trigger('removed');
+        return this;
+    },
+
+    addSubview: function(view) {
+        this.items.push(view);
+    }
 
 }, {
     extend: function(child) {
@@ -153,18 +252,33 @@ Ts.Modal = Ts.View.extend({
 Ts.Plugin = Ts.Object.extend({
 
     parent: null,
-    _children: null,
+
+    items: null,
+
     _started: false,
     _initialized: false,
+    _destroyed: false,
 
     initialize : function(args) {
-        Ts.Object.prototype.initialize.apply(this, arguments);
+        var items = _.result(args, 'items', []);
 
-        this._children = [];
+        if (!_.isArray(items)) {
+            if (_.isObject(items)) {
+                items = [items];
+            } else {
+                items = [];
+            }
+        }
+
+        args.items = this.items;
+
+        Ts.Object.prototype.initialize.apply(this, arguments);
     },
 
     /**
      * Children are initialized before the parent (though they can intercept this via events)
+     *
+     * They are only initialized once and only once.
      *
      * @param parent
      */
@@ -177,17 +291,22 @@ Ts.Plugin = Ts.Object.extend({
 
         this.parent = parent;
 
-        this.trigger('before_init');
+        this.beforeInit();
 
-        _.each(this._children, function(child) {
+        _.each(this.items, function(child) {
             child.init(this);
         }, this);
 
-        this.onInit();
+        this.afterInit();
 
-        this.trigger('after_init');
+        return this;
     },
 
+    /**
+     * Children are started after the parent has finished initialization.
+     *
+     * They are only started once and only once.
+     */
     start : function() {
         if (this._started) {
             throw 'Cannot start twice';
@@ -199,13 +318,15 @@ Ts.Plugin = Ts.Object.extend({
 
         this.onStart();
 
-        _.each(this._children, function(child) {
+        _.each(this.items, function(child) {
             child.start();
         }, this);
+
+        return this;
     },
 
     addPlugin : function(plugin) {
-        this._children.push(plugin);
+        this.items.push(plugin);
 
         if (this._initialized) {
             plugin.init(this);
@@ -216,7 +337,60 @@ Ts.Plugin = Ts.Object.extend({
         }
     },
 
-    onStart: Ts.emptyFn,
-    onInit: Ts.emptyFn
+    /**
+     * Called when the parent is created.
+     * This is before all of the plugins have been initialized.
+     * You are allowed to modify your parent, but should not depend on any other plugins.
+     */
+    afterInit: function() {
+        this.trigger('afterInit');
+        return this;
+    },
+
+    beforeInit: function() {
+        this.trigger('beforeInit');
+        return this;
+    },
+
+    /**
+     * This happens after all the plugins have been initialized.
+     * You shouldn't modify the parent anymore, but you can trust that the other plugins have done their stuff and
+     * are available.
+     */
+    beforeStart: function() {
+        this.trigger('beforeStart');
+        return this;
+    },
+
+    afterStart: function() {
+        this.trigger('afterStart');
+        return this;
+    },
+
+    destroy: function() {
+        if (this._destroyed) {
+            throw 'Can only destroy once';
+        }
+
+        this.beforeDestroy();
+
+        _.each(this.items, function(item) {
+            item.destroy();
+        });
+
+        this.afterDestroy();
+        return this;
+    },
+
+    beforeDestroy: function() {
+        this.trigger('beforeDestroy');
+        return this;
+    },
+
+    afterDestroy: function() {
+        this.trigger('afterDestroy');
+        this.trigger('destroyed');
+        return this;
+    }
 
 });
