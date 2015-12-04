@@ -111,12 +111,16 @@ Ts.View = Backbone.View.extend({
     },
 
     _render: function() {
+        this.$el.html(this.applyTemplate());
+
+        return this;
+    },
+
+    applyTemplate: function() {
         var tpl = this.getTemplate();
         var args = this.getTemplateArgs();
 
-        this.$el.html(tpl(args));
-
-        return this;
+        return tpl(args);
     },
 
     afterRender: function() {
