@@ -17,6 +17,11 @@ Ts.View = Backbone.View.extend({
     listeners: null,
 
     /**
+     * The model that is used for templating.
+     */
+    model: null,
+
+    /**
      * If you want to require an instance to declare these objects. Ex: ['thiz', 'that', 'another'];
      *
      * @type Array
@@ -96,6 +101,14 @@ Ts.View = Backbone.View.extend({
     // private method for you to sneak in your init
     _initialize : Ts.emptyFn,
 
+    /**
+     * Used to assign a view to a particular el within your el (via selector)
+     *
+     * Tells the subview to assign to that El and then calls render on it to refresh it.
+     *
+     * @param view
+     * @param selector
+     */
     assignView : function(view, selector) {
         view.setElement(this.$(selector)).render();
     },
@@ -159,7 +172,7 @@ Ts.View = Backbone.View.extend({
         return this.tpl;
     },
 
-    renderedEl: function() {
+    getRenderedEl: function() {
         if (!this.rendered) {
             this.render();
         }
@@ -175,24 +188,39 @@ Ts.View = Backbone.View.extend({
         return 0 !== this.$el.parent().length;
     },
 
-    remove: function() {if (this.items) {
+    remove: function() {
+        if (this.items) {
             _.each(this.items, function(subview) {
                 if (subview && _.isFunction(subview.remove)) {
                     subview.remove.apply(subview, arguments);
                 }
             });
-            delete this.items;
+
+            // Clear the array. Recommended solution online.
+            // http://stackoverflow.com/questions/1232040/how-do-i-empty-an-array-in-javascript
+            this.items.length = 0;
         }
 
         if (this.plugins) {
             _.each(this.plugins, function(plugin) {
                 plugin.destroy();
             }, this);
-            delete this.plugins;
+
+            // Clear the array. Recommended solution online.
+            // http://stackoverflow.com/questions/1232040/how-do-i-empty-an-array-in-javascript
+            this.plugins.length = 0;
         }
 
         // This will call stopListening()
         Backbone.View.prototype.remove.apply(this, arguments);
+
+        delete this.items;
+        delete this.plugins;
+        delete this.model;
+        delete this.tpl;
+        delete this.listeners;
+        delete this.requiredOptions;
+        delete this.rendered;
 
         this.trigger('removed');
         return this;
