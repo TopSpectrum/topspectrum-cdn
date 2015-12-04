@@ -25,7 +25,10 @@ Ts.View = Backbone.View.extend({
 
     rendered: false,
 
+    tpl: '<div id="{{#if cid}}{{cid}}{{else}}{{id}}{{/if}}"></div>',
+
     items: null,
+
     plugins: null,
 
     initialize: function (args) {
@@ -81,12 +84,6 @@ Ts.View = Backbone.View.extend({
     },
 
     afterInitialize: function() {
-        this.render = _.wrap(this.render, function(render) {
-            this.beforeRender();
-            render.call(this);
-            this.afterRender();
-        }, this);
-
         // We need to init the plugins.
         _.each(this.plugins, function(plugin) {
             plugin.start();
@@ -99,12 +96,63 @@ Ts.View = Backbone.View.extend({
     // private method for you to sneak in your init
     _initialize : Ts.emptyFn,
 
+    assignView : function(view, selector) {
+        view.setElement(this.$(selector)).render();
+    },
+
+    render: function() {
+        this.beforeRender();
+        this._render();
+        this.afterRender();
+    },
+
     beforeRender: function() {
         this.trigger('beforeRender');
     },
 
-    assignView : function(view, selector) {
-        view.setElement(this.$(selector)).render();
+    _render: function() {
+        var tpl = this.getTemplate();
+        var args = this.getTemplateArgs();
+
+        this.$el.html(tpl(args));
+
+        return this;
+    },
+
+    afterRender: function() {
+        this.rendered = true;
+        this.trigger('afterRender');
+    },
+
+    getTemplateArgs : function() {
+        if (this.model) {
+            if (_.isFunction(this.model.toJSON)) {
+                return this.model.toJSON();
+            } else {
+                return this.model;
+            }
+        } else {
+            return this;
+        }
+    },
+
+    getTemplate: function() {
+        if (!this.tpl) {
+            // No rendering needed if we have no template.
+            return Handlebars.compile('');
+        }
+
+        if (_.isFunction(this.tpl)) {
+            // return below.
+        } else if (_.isString(this.tpl)) {
+            this.tpl = Handlebars.compile(this.tpl);
+        } else if (_.isArray(this.tpl)) {
+            this.tpl = Handlebars.compile(this.tpl.join(' '));
+        } else {
+            throw 'Unknown template type ' + this.tpl
+        }
+
+        return this.tpl;
     },
 
     renderedEl: function() {
@@ -115,11 +163,6 @@ Ts.View = Backbone.View.extend({
         return this.$el;
     },
 
-    afterRender: function() {
-        this.rendered = true;
-        this.trigger('afterRender');
-    },
-
     isAttached: function() {
         if (!this.$el) {
             return false;
@@ -128,10 +171,7 @@ Ts.View = Backbone.View.extend({
         return 0 !== this.$el.parent().length;
     },
 
-    remove: function() {
-        this.undelegateEvents();
-
-        if (this.items) {
+    remove: function() {if (this.items) {
             _.each(this.items, function(subview) {
                 if (subview && _.isFunction(subview.remove)) {
                     subview.remove.apply(subview, arguments);
