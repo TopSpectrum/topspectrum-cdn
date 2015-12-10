@@ -14,7 +14,7 @@ Ts.View = Backbone.View.extend({
      *
      * @type Object
      */
-    listeners: null,
+    listeners: undefined,
 
     /**
      * The model that is used for templating.
@@ -38,32 +38,185 @@ Ts.View = Backbone.View.extend({
 
     initialize: function (args) {
         this.beforeInitialize(args);
-        this._initialize(args);
+        var result = this.init(args);
         this.afterInitialize(args);
-        return this;
+        return result;
+    },
+
+    //bind: function() {
+    //    for (var index in arguments) {
+    //        var name = arguments[index];
+    //        debugger;
+    //        var fn = this[name];
+    //        if (!fn) {
+    //            continue;
+    //        }
+    //
+    //        if (fn.__bound) {
+    //            // Already bound, don't double bind.
+    //            continue;
+    //        }
+    //
+    //        var parentFn = this.prototype[name];
+    //
+    //        if (!parentFn) {
+    //            // There is no parentFn... Just stub one.
+    //            parentFn = $.noop;
+    //        }
+    //
+    //        var scope = this;
+    //
+    //        // Overwrite the function to provide "super" support.
+    //        this[name] = function() {
+    //            var args = arguments;
+    //
+    //            // When they call this.super(); they are actually calling: this.prototype.[name].apply(this, arguments);
+    //            // If they pass in custom arguments, then we'll pass those along. If they do not pass in any arguments,
+    //            // we'll pass through the original args
+    //            this.super = function() {
+    //                var a = _.isEmpty(arguments) ? args : arguments;
+    //
+    //                return parentFn.apply(scope.prototype, a);
+    //            };
+    //
+    //            var result = fn.apply(scope, arguments);
+    //        };
+    //
+    //        this[name].__bound = true;
+    //    }
+    //},
+    //
+    ///**
+    // * Bind the functions so we can call "super" on them.
+    // */
+    //bindAll: function() {
+    //    debugger;
+    //    var names = this.__get_functions();
+    //
+    //    this.bind(names);
+    //},
+
+    __get_functions: function() {
+        var res = [];
+        var names = Object.getOwnPropertyNames(this);
+
+        for(var name in names) {
+            if(typeof this[name] == "function") {
+                res.push(name);
+            }
+        }
+
+        return res;
+    },
+
+    __force_array: function(value) {
+        if (!value) {
+            return [];
+        } else if (_.isArray(value)) {
+            return value;
+        } else {
+            return [value];
+        }
     },
 
     beforeInitialize: function(args) {
+        var listeners = [];
+
         if (args) {
             if (this.listeners && args.listeners) {
-                args.listeners = _.extend({}, this.listeners, args.listeners);
+                listeners = _.union(this.__force_array(args.listeners), this.__force_array(this.listeners));
             }
 
             $.extend(this, args);
         }
 
-        if (this.listeners) {
-            _.each(this.listeners, function(method, eventName) {
-                if (!_.isFunction(method)) {
-                    method = this[method];
+        if (listeners) {
+            var globalScope = _.result(args.listeners, 'scope') || _.result(this.listeners, 'scope') || this;
 
-                    if (!_.isFunction(method)) {
-                        return;
+            function resolveEventName(eventName) {
+                if (!eventName) {
+                    return; // returns undefined.
+                }
+
+                if (_.isString(eventName)) {
+                    return [eventName]; // returns array
+                } else if (_.isArray(eventName)) {
+                    return eventName; // returns array
+                }
+
+                throw 'Unable to determine event name';
+            }
+
+            _.each(listeners, function(listener, index) {
+                var scope = listener.scope || globalScope;
+                var fn = listener.fn;
+                var events = resolveEventName(listener.events);
+                var event = resolveEventName(listener.event);
+
+                // Optionally attach on the "event" field
+
+                if (_.isArray(event)) {
+                    if (_.isUndefined(events)) {
+                        events = event;
+                    } else {
+                        events = _.union(events, event);
                     }
                 }
 
-                this.listenTo(this, eventName, method);
+                if (_.isUndefined(events)) {
+                    // The events list is undefined. This must be the "object keys are event names" situation.
+                    _.each(listener, function(value, key) {
+                        if ('scope' === key) {
+                            return;
+                        }
+
+                        var _fn = value;
+                        var eventName = key;
+                        var __fn = _fn || fn;
+
+                        if (_.isString(__fn)) {
+                            __fn = this[_fn];
+                        }
+
+                        if (scope !== this) {
+                            __fn = $.proxy(__fn, scope);
+                        }
+
+                        this.listenTo(this, eventName, __fn);
+                    }, this);
+                } else {
+                    // The events array is defined, so we're going to pick the names out of that.
+                    if (scope !== this) {
+                        fn = $.proxy(fn, scope);
+                    }
+
+                    _.each(events, function(eventName) {
+                        this.listenTo(this, eventName, fn);
+                    }, this);
+                }
             }, this);
+
+            //_.each(this.listeners, function(method, eventName) {
+            //    if (eventName === 'scope') {
+            //        // Scope is a special key.
+            //        return;
+            //    }
+            //
+            //    if (!_.isFunction(method)) {
+            //        method = this[method];
+            //
+            //        if (!_.isFunction(method)) {
+            //            // Not a function, just ignore...
+            //            return;
+            //        }
+            //    }
+            //
+            //    if (this !== scope) {
+            //        method = $.proxy(method, scope);
+            //    }
+            //
+            //    this.listenTo(this, eventName, method);
+            //}, this);
         }
 
         if (this.requiredOptions) {
@@ -89,6 +242,10 @@ Ts.View = Backbone.View.extend({
     },
 
     afterInitialize: function() {
+        if (!this.cid) {
+            this.cid = _.uniqueId('view_');
+        }
+
         // We need to init the plugins.
         _.each(this.plugins, function(plugin) {
             plugin.start();
@@ -99,7 +256,7 @@ Ts.View = Backbone.View.extend({
     },
 
     // private method for you to sneak in your init
-    _initialize : Ts.emptyFn,
+    init : function() {},
 
     /**
      * Used to assign a view to a particular el within your el (via selector)
@@ -117,6 +274,8 @@ Ts.View = Backbone.View.extend({
         this.beforeRender();
         this._render();
         this.afterRender();
+
+        return this;
     },
 
     beforeRender: function() {
@@ -274,7 +433,16 @@ Ts.Modal = Ts.View.extend({
     // Attach all inheritable methods to the Model prototype.
     _.extend(Ts.Object.prototype, Backbone.Events, {
 
-        initialize: Ts.emptyFn
+        initialize: function(args) {
+            this.beforeInitialize(args);
+            var result = this.init(args);
+            this.afterInitialize();
+            return result;
+        },
+
+        beforeInitialize: Ts.emptyFn,
+        afterInitialize: Ts.emptyFn,
+        init: Ts.emptyFn
 
     });
 
