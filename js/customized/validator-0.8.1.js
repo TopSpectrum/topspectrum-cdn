@@ -71,6 +71,10 @@
     };
 
     Validator.VALIDATORS = {
+        email: function($el) {
+            var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            return re.test($el.val());
+        },
         native: function ($el) {
             var el = $el[0];
             return el.checkValidity ? el.checkValidity() : true;
@@ -145,7 +149,7 @@
 
         if (test) {
             $.each(Validator.VALIDATORS, $.proxy(function (key, validator) {
-                if (($el.is('[' + key + ']')) || $el.data(key)) {
+                if (($el.is('[type="' + key + '"]')) || $el.data(key)) {
                     var passesValidation = validator.call(this, $el, context);
                     var incomplete = fieldIncomplete.call($el[0]);
 
