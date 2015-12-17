@@ -109,22 +109,24 @@ Ts.View = Backbone.View.extend({
         return res;
     },
 
-    __force_array: function(value) {
-        if (!value) {
-            return [];
-        } else if (_.isArray(value)) {
-            return value;
-        } else {
-            return [value];
-        }
-    },
-
     beforeInitialize: function(args) {
         var listeners = [];
 
         if (args) {
-            if (this.listeners && args.listeners) {
-                listeners = _.union(this.__force_array(args.listeners), this.__force_array(this.listeners));
+            if (this.listeners || args.listeners) {
+                function __force_array(value) {
+                    if (!value) {
+                        return [];
+                    } else if (_.isArray(value)) {
+                        return value;
+                    } else {
+                        return [value];
+                    }
+                }
+
+
+
+                listeners = _.union(__force_array(args.listeners), __force_array(this.listeners));
             }
 
             $.extend(this, args);
@@ -150,7 +152,7 @@ Ts.View = Backbone.View.extend({
             _.each(listeners, function(listener, index) {
                 var scope = listener.scope || globalScope;
                 var fn = listener.fn;
-                var events = resolveEventName(listener.events);
+                var events = resolveEventName(listener.events || listener.on);
                 var event = resolveEventName(listener.event);
 
                 // Optionally attach on the "event" field
@@ -186,6 +188,11 @@ Ts.View = Backbone.View.extend({
                     }, this);
                 } else {
                     // The events array is defined, so we're going to pick the names out of that.
+
+                    if (_.isString(fn))  {
+                        fn = this[fn];
+                    }
+
                     if (scope !== this) {
                         fn = $.proxy(fn, scope);
                     }
@@ -195,28 +202,6 @@ Ts.View = Backbone.View.extend({
                     }, this);
                 }
             }, this);
-
-            //_.each(this.listeners, function(method, eventName) {
-            //    if (eventName === 'scope') {
-            //        // Scope is a special key.
-            //        return;
-            //    }
-            //
-            //    if (!_.isFunction(method)) {
-            //        method = this[method];
-            //
-            //        if (!_.isFunction(method)) {
-            //            // Not a function, just ignore...
-            //            return;
-            //        }
-            //    }
-            //
-            //    if (this !== scope) {
-            //        method = $.proxy(method, scope);
-            //    }
-            //
-            //    this.listenTo(this, eventName, method);
-            //}, this);
         }
 
         if (this.requiredOptions) {
@@ -235,7 +220,7 @@ Ts.View = Backbone.View.extend({
 
         // We need to init the plugins.
         _.each(this.plugins, function(plugin) {
-            plugin.init(this);
+            plugin.attach(this);
         }, this);
 
         return this;
@@ -429,14 +414,17 @@ Ts.Modal = Ts.View.extend({
         this.initialize.apply(this, arguments);
     };
 
-
     // Attach all inheritable methods to the Model prototype.
     _.extend(Ts.Object.prototype, Backbone.Events, {
 
         initialize: function(args) {
+            // The original config.
+            this._config = args;
+
             this.beforeInitialize(args);
             var result = this.init(args);
             this.afterInitialize();
+
             return result;
         },
 
@@ -449,40 +437,41 @@ Ts.Modal = Ts.View.extend({
     // Helper function to correctly set up the prototype chain for subclasses.
     // Similar to `goog.inherits`, but uses a hash of prototype properties and
     // class properties to be extended.
-    Ts.Object.extend = function(protoProps, staticProps) {
-        var parent = this;
-        var child;
-
-        // The constructor function for the new subclass is either defined by you
-        // (the "constructor" property in your `extend` definition), or defaulted
-        // by us to simply call the parent constructor.
-        if (protoProps && _.has(protoProps, 'constructor')) {
-            child = protoProps.constructor;
-        } else {
-            child = function(){ return parent.apply(this, arguments); };
-        }
-
-        // Add static properties to the constructor function, if supplied.
-        _.extend(child, parent, staticProps);
-
-        // Set the prototype chain to inherit from `parent`, without calling
-        // `parent` constructor function.
-        var Surrogate = function(){ this.constructor = child; };
-        Surrogate.prototype = parent.prototype;
-        child.prototype = new Surrogate;
-
-        // Add prototype properties (instance properties) to the subclass,
-        // if supplied.
-        if (protoProps) {
-            _.extend(child.prototype, protoProps);
-        }
-
-        // Set a convenience property in case the parent's prototype is needed
-        // later.
-        child.__super__ = parent.prototype;
-
-        return child;
-    };
+    //Ts.Object.extend = function(protoProps, staticProps) {
+    //    var parent = this;
+    //    var child;
+    //
+    //    // The constructor function for the new subclass is either defined by you
+    //    // (the "constructor" property in your `extend` definition), or defaulted
+    //    // by us to simply call the parent constructor.
+    //    if (protoProps && _.has(protoProps, 'constructor')) {
+    //        child = protoProps.constructor;
+    //    } else {
+    //        child = function(){ return parent.apply(this, arguments); };
+    //    }
+    //
+    //    // Add static properties to the constructor function, if supplied.
+    //    _.extend(child, parent, staticProps);
+    //
+    //    // Set the prototype chain to inherit from `parent`, without calling
+    //    // `parent` constructor function.
+    //    var Surrogate = function(){ this.constructor = child; };
+    //    Surrogate.prototype = parent.prototype;
+    //    child.prototype = new Surrogate;
+    //
+    //    // Add prototype properties (instance properties) to the subclass,
+    //    // if supplied.
+    //    if (protoProps) {
+    //        _.extend(child.prototype, protoProps);
+    //    }
+    //
+    //    // Set a convenience property in case the parent's prototype is needed
+    //    // later.
+    //    child.__super__ = parent.prototype;
+    //
+    //    return child;
+    //};
+    Ts.Object.extend = Backbone.Model.extend;
 }());
 
 /**
@@ -491,29 +480,13 @@ Ts.Modal = Ts.View.extend({
  */
 Ts.Plugin = Ts.Object.extend({
 
-    parent: null,
+    parent: undefined,
 
-    items: null,
+    _items: undefined,
 
     _started: false,
-    _initialized: false,
+    _attached: false,
     _destroyed: false,
-
-    initialize : function(args) {
-        var items = _.result(args, 'items', []);
-
-        if (!_.isArray(items)) {
-            if (_.isObject(items)) {
-                items = [items];
-            } else {
-                items = [];
-            }
-        }
-
-        args.items = this.items;
-
-        Ts.Object.prototype.initialize.apply(this, arguments);
-    },
 
     /**
      * Children are initialized before the parent (though they can intercept this via events)
@@ -522,22 +495,26 @@ Ts.Plugin = Ts.Object.extend({
      *
      * @param parent
      */
-    init : function(parent) {
-        if (this._initialized) {
-            throw 'Cannot init twice';
+    attach : function(parent) {
+        if (this._attached) {
+            throw 'Cannot attach twice';
         }
 
-        this._initialized = true;
+        this._attached = true;
 
         this.parent = parent;
 
-        this.beforeInit();
+        this.beforeAttach();
 
-        _.each(this.items, function(child) {
-            child.init(this);
+        if (this.parent) {
+            this.listenTo(this.parent);
+        }
+
+        _.each(this._items, function(child) {
+            child.attach(this);
         }, this);
 
-        this.afterInit();
+        this.afterAttach();
 
         return this;
     },
@@ -550,31 +527,44 @@ Ts.Plugin = Ts.Object.extend({
     start : function() {
         if (this._started) {
             throw 'Cannot start twice';
-        } else if (!this._initialized) {
-            this.init(null);
+        } else if (!this._attached) {
+            throw 'Cannot start if not attached';
         }
 
         this._started = true;
 
-        this.onStart();
+        this.beforeStart();
 
-        _.each(this.items, function(child) {
+        _.each(this._items, function(child) {
             child.start();
         }, this);
+
+        this.afterStart();
 
         return this;
     },
 
-    addPlugin : function(plugin) {
-        this.items.push(plugin);
+    onStart: Ts.emptyFn,
 
-        if (this._initialized) {
-            plugin.init(this);
+    addPlugin : function(plugins) {
+        if (_.isArray(plugins)) {
+            _.each(plugins, function(plugin) {
+                this.addPlugin(plugin);
+            }, this);
+            return plugins;
+        }
+
+        this._items.push(plugins);
+
+        if (this._attached) {
+            plugins.attach(this);
         }
 
         if (this._started) {
-            plugin.start();
+            plugins.start();
         }
+
+        return $.Deferred().resolveWith(this, [ plugins ]).promise();
     },
 
     /**
@@ -582,13 +572,26 @@ Ts.Plugin = Ts.Object.extend({
      * This is before all of the plugins have been initialized.
      * You are allowed to modify your parent, but should not depend on any other plugins.
      */
-    afterInit: function() {
-        this.trigger('afterInit');
+    afterAttach: function() {
+        this.trigger('afterAttach');
         return this;
     },
 
-    beforeInit: function() {
-        this.trigger('beforeInit');
+    beforeAttach: function() {
+        this.trigger('beforeAttach');
+
+        var items = _.result(this, 'items', []);
+
+        if (!_.isArray(items)) {
+            if (_.isObject(items)) {
+                items = [items];
+            } else {
+                items = [];
+            }
+        }
+
+        this._items = items;
+
         return this;
     },
 
@@ -614,7 +617,7 @@ Ts.Plugin = Ts.Object.extend({
 
         this.beforeDestroy();
 
-        _.each(this.items, function(item) {
+        _.each(this._items, function(item) {
             item.destroy();
         });
 
