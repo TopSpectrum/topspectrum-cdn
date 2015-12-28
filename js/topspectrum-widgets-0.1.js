@@ -37,6 +37,7 @@ Ts.View = Backbone.View.extend({
     plugins: null,
 
     initialize: function (args) {
+        args = args || {};
         this.beforeInitialize(args);
         var result = this.init(args);
         this.afterInitialize(args);
@@ -112,25 +113,23 @@ Ts.View = Backbone.View.extend({
     beforeInitialize: function(args) {
         var listeners = [];
 
-        if (args) {
-            if (this.listeners || args.listeners) {
-                function __force_array(value) {
-                    if (!value) {
-                        return [];
-                    } else if (_.isArray(value)) {
-                        return value;
-                    } else {
-                        return [value];
-                    }
+        args = args || {};
+
+        if (this.listeners || args.listeners) {
+            function __force_array(value) {
+                if (!value) {
+                    return [];
+                } else if (_.isArray(value)) {
+                    return value;
+                } else {
+                    return [value];
                 }
-
-
-
-                listeners = _.union(__force_array(args.listeners), __force_array(this.listeners));
             }
 
-            $.extend(this, args);
+            listeners = _.union(__force_array(args.listeners), __force_array(this.listeners));
         }
+
+        $.extend(this, args);
 
         if (listeners) {
             var globalScope = _.result(args.listeners, 'scope') || _.result(this.listeners, 'scope') || this;
@@ -226,6 +225,14 @@ Ts.View = Backbone.View.extend({
         return this;
     },
 
+    /**
+     * Will assign a unique ID to this instance (if not already defined)
+     * Will start all of the children plugins.
+     * Will trigger an event declaring that we are initialized.
+     *
+     * @protected
+     * @returns {Ts.View}
+     */
     afterInitialize: function() {
         if (!this.cid) {
             this.cid = _.uniqueId('view_');
@@ -240,7 +247,10 @@ Ts.View = Backbone.View.extend({
         return this;
     },
 
-    // private method for you to sneak in your init
+    /**
+     * @protected
+     * @constructor
+     */
     init : function() {},
 
     /**
@@ -355,6 +365,8 @@ Ts.View = Backbone.View.extend({
             this.plugins.length = 0;
         }
 
+        this.trigger('removed');
+
         // This will call stopListening()
         Backbone.View.prototype.remove.apply(this, arguments);
 
@@ -366,7 +378,6 @@ Ts.View = Backbone.View.extend({
         delete this.requiredOptions;
         delete this.rendered;
 
-        this.trigger('removed');
         return this;
     },
 
@@ -408,6 +419,7 @@ Ts.Modal = Ts.View.extend({
     /**
      * @class Ts.Object
      * @extends Object
+     * @constructor
      */
     Ts.Object = function(options) {
         _.extend(this, options);
@@ -417,19 +429,33 @@ Ts.Modal = Ts.View.extend({
     // Attach all inheritable methods to the Model prototype.
     _.extend(Ts.Object.prototype, Backbone.Events, {
 
+        /**
+         * @private
+         * @constructor
+         */
         initialize: function(args) {
             // The original config.
             this._config = args;
 
             this.beforeInitialize(args);
-            var result = this.init(args);
+            this.init(args);
             this.afterInitialize();
-
-            return result;
         },
 
+        /**
+         * @protected
+         */
         beforeInitialize: Ts.emptyFn,
+
+        /**
+         * @protected
+         */
         afterInitialize: Ts.emptyFn,
+
+        /**
+         * @protected
+         * @constructor
+         */
         init: Ts.emptyFn
 
     });
@@ -480,13 +506,44 @@ Ts.Modal = Ts.View.extend({
  */
 Ts.Plugin = Ts.Object.extend({
 
+    /**
+     * @type object
+     * @private
+     */
     parent: undefined,
 
+    /**
+     * @type array
+     * @private
+     */
     _items: undefined,
 
+    /**
+     * @type boolean
+     * @private
+     */
     _started: false,
+
+    /**
+     * @type boolean
+     * @private
+     */
     _attached: false,
+
+    /**
+     * @type boolean
+     * @private
+     */
     _destroyed: false,
+
+    /**
+     * If this is set to true, it will make this plugin transparent.
+     * The children will be initialized directly onto our parent.
+     * Essentially this plugin becomes a thin wrapper.
+     * Only trigger this to true if you know what you're doing. It's only for a very specific use-case where  you want
+     * an object to host plugins but cannot make it a Plugin itself.
+     */
+    pluginHostMode: false,
 
     /**
      * Children are initialized before the parent (though they can intercept this via events)
@@ -494,6 +551,7 @@ Ts.Plugin = Ts.Object.extend({
      * They are only initialized once and only once.
      *
      * @param parent
+     * @public
      */
     attach : function(parent) {
         if (this._attached) {
@@ -511,7 +569,7 @@ Ts.Plugin = Ts.Object.extend({
         }
 
         _.each(this._items, function(child) {
-            child.attach(this);
+            child.attach(this.__get_parent());
         }, this);
 
         this.afterAttach();
@@ -523,6 +581,8 @@ Ts.Plugin = Ts.Object.extend({
      * Children are started after the parent has finished initialization.
      *
      * They are only started once and only once.
+     *
+     * @public
      */
     start : function() {
         if (this._started) {
@@ -544,8 +604,16 @@ Ts.Plugin = Ts.Object.extend({
         return this;
     },
 
+    /**
+     * @private
+     */
     onStart: Ts.emptyFn,
 
+    /**
+     * @public
+     * @param plugins
+     * @returns {*}
+     */
     addPlugin : function(plugins) {
         if (_.isArray(plugins)) {
             _.each(plugins, function(plugin) {
@@ -571,12 +639,17 @@ Ts.Plugin = Ts.Object.extend({
      * Called when the parent is created.
      * This is before all of the plugins have been initialized.
      * You are allowed to modify your parent, but should not depend on any other plugins.
+     * @private
      */
     afterAttach: function() {
         this.trigger('afterAttach');
         return this;
     },
 
+    /**
+     * @private
+     * @returns {Ts.Plugin}
+     */
     beforeAttach: function() {
         this.trigger('beforeAttach');
 
@@ -599,17 +672,26 @@ Ts.Plugin = Ts.Object.extend({
      * This happens after all the plugins have been initialized.
      * You shouldn't modify the parent anymore, but you can trust that the other plugins have done their stuff and
      * are available.
+     * @private
      */
     beforeStart: function() {
         this.trigger('beforeStart');
         return this;
     },
 
+    /**
+     * @private
+     * @returns {Ts.Plugin}
+     */
     afterStart: function() {
         this.trigger('afterStart');
         return this;
     },
 
+    /**
+     * @public
+     * @returns {Ts.Plugin}
+     */
     destroy: function() {
         if (this._destroyed) {
             throw 'Can only destroy once';
@@ -625,15 +707,36 @@ Ts.Plugin = Ts.Object.extend({
         return this;
     },
 
+    /**
+     * @private
+     * @returns {Ts.Plugin}
+     */
     beforeDestroy: function() {
         this.trigger('beforeDestroy');
         return this;
     },
 
+    /**
+     * @private
+     * @returns {Ts.Plugin}
+     */
     afterDestroy: function() {
         this.trigger('afterDestroy');
         this.trigger('destroyed');
         return this;
-    }
+    },
+
+    /**
+     * Determines what parent we should tell our children about.
+     *
+     * @private
+     */
+    __get_parent: function() {
+        if (this.pluginHostMode) {
+            return this.parent || this;
+        } else {
+            return this;
+        }
+    },
 
 });
