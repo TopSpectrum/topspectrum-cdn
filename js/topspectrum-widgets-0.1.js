@@ -605,11 +605,6 @@ Ts.Plugin = Ts.Object.extend({
     },
 
     /**
-     * @private
-     */
-    onStart: Ts.emptyFn,
-
-    /**
      * @public
      * @param plugins
      * @returns {*}
