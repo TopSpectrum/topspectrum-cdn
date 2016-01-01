@@ -55,6 +55,26 @@ function assert(e) {
         return $.extend(true, {}, obj2, obj1);
     };
 
+    /**
+     * Copies all the properties of config to object if they don't already exist.
+     * @param {Object} object The receiver of the properties
+     * @param {Object} config The source of the properties
+     * @return {Object} returns obj
+     */
+    $.applyIf = function(object, config) {
+        var property;
+        if (object) {
+            for (property in config) {
+                var o = object[property];
+                if (o === undefined || o === null) {
+                    object[property] = config[property];
+                }
+            }
+        }
+
+        return object;
+    };
+
 }(jQuery));
 
 (function ($) {
