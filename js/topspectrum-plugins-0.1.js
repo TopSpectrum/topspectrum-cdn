@@ -17,6 +17,21 @@ function assert(e) {
         return fn;
     };
 
+    /**
+     * Null-safe way to get the first element from an array.
+     */
+    $.first = function (e) {
+        if (!e) {
+            return null;
+        }
+
+        if (!e.length) {
+            return null;
+        }
+
+        return e[0];
+    };
+
     $.emptyFn = function () {
     };
 
