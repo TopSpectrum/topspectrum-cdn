@@ -291,9 +291,15 @@ Ts.View = Backbone.View.extend({
     },
 
     afterRender: function() {
+        this.initEl();
         this.rendered = true;
         this.trigger('afterRender');
     },
+
+    /**
+     * This is where you should attach your event listeners. It happens during render.
+     */
+    initEl: function() {},
 
     getTemplateArgs : function() {
         if (this.model) {
@@ -376,6 +382,7 @@ Ts.View = Backbone.View.extend({
         delete this.tpl;
         delete this.listeners;
         delete this.requiredOptions;
+        delete this.options;
         delete this.rendered;
 
         return this;
@@ -428,6 +435,13 @@ Ts.Modal = Ts.View.extend({
 
     // Attach all inheritable methods to the Model prototype.
     _.extend(Ts.Object.prototype, Backbone.Events, {
+
+        /**
+         * The original config that was passed into the constructor.
+         *
+         * @type Object
+         */
+        _config: undefined,
 
         /**
          * @private

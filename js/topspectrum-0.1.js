@@ -65,6 +65,14 @@ var Ts = {
 
         checkVersion: function(suggestedVersion) {},
 
+        checkExists: function(value, msg) {
+            if (!value) {
+                throw msg || 'The value passed in did not exist.';
+            }
+
+            return value;
+        },
+
         /**
          * Throws an exception if the type of the input does not match the expected type.
          * Will work for undefined if you pass in undefined for the expectedType.
