@@ -115,6 +115,30 @@ var Ts = {
         }
     },
 
+    Logger: function(name) {
+        if (!this.__loggered) {
+            this.__loggered = true;
+
+            if (window.Logger) {
+                window.Logger.useDefaults();
+            }
+        }
+
+        if (window.Logger) {
+            return window.Logger.get(name);
+        } else if (window.console) {
+            return window.console;
+        }
+
+        return {
+            info: function() {},
+            warn: function() {},
+            error: function() {},
+            log: function() {},
+            debug: function() {}
+        }
+    },
+
     /**
      * Convenience method for ensuring the type of something.
      * Wrapper around underscorejs .result() method.

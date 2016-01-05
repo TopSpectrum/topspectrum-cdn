@@ -1,10 +1,13 @@
 /**
+ * @class View
  * @class Ts.View
  * @extends Backbone.View
  */
 Ts.View = Backbone.View.extend({
 
     $el : null,
+
+    xtype: 'View',
 
     /**
      * The "events" hash is a clusterfuck. As far as I can tell, Backbone fucked up here.
@@ -28,13 +31,43 @@ Ts.View = Backbone.View.extend({
      */
     requiredOptions: null,
 
+    /**
+     * @type Object
+     */
+    subviews: undefined,
+
     rendered: false,
 
-    tpl: '<div id="{{#if cid}}{{cid}}{{else}}{{id}}{{/if}}"></div>',
+    tpl: undefined,
 
     items: null,
 
     plugins: null,
+
+    /**
+     * Execute a quick log statement.
+     *
+     * @returns {View}
+     */
+    log: function() {
+        var logger = this.logger();
+            logger.debug.apply(logger, arguments);
+        return this;
+    },
+
+    /**
+     * Get the logger for you to use.
+     *
+     * @returns {*|{info, warn, error, log, debug}}
+     */
+    logger: function() {
+        if (!this._logger_instance) {
+            var name = this.xtype + '#' + this.cid + '';
+            this._logger_instance = Ts.Logger(name);
+        }
+
+        return this._logger_instance;
+    },
 
     initialize: function (args) {
         args = args || {};
@@ -42,6 +75,65 @@ Ts.View = Backbone.View.extend({
         var result = this.init(args);
         this.afterInitialize(args);
         return result;
+    },
+
+    setElement: function(element, delegate) {
+        // Our element contents are actually a handlebars template
+        var $el = $(element);
+
+        var id = $el.attr('id') || this.cid;
+        if (id) {
+            this.cid = id;
+        }
+
+        // Does it have an id? If it does, we need to make it ours.
+        $el.attr('id', id);
+        $el.attr('data-rendered', 'false');
+
+        var containsScriptTagTemplate = ($el.is('script[type="text/x-handlebars-template"]'));
+        var containsATemplate = ($el.is('[data-view-template="true"]'));
+        var isAnyKindOfTemplate = containsScriptTagTemplate || containsATemplate;
+        var existingTemplate = this.getTemplate();
+
+        if (isAnyKindOfTemplate && existingTemplate) {
+            this.logger().warn('The element you passed to me looks like a template, but I already have one.', existingTemplate);
+        }
+
+        if (!existingTemplate) {
+            // We don't have an existing template. Let's try to auto detect one?
+
+            if (isAnyKindOfTemplate) {
+                var tpl;
+
+                if (containsScriptTagTemplate) {
+                    // We need to remove this element.
+                    // The script tag is our html.
+                    tpl = Handlebars.compile($el.html());
+
+                    var $replacementEl = $(Handlebars.compile('<view id="{{ cid }}" data-view-template="compiled" data-view-rendered="false"></view>')(this));
+
+                    {
+                        $el.replaceWith($replacementEl);
+                        $el = $replacementEl
+                    }
+
+                    this.log('Replacing script tag template with a view node.');
+                } else if (containsATemplate) {
+                    // So we are a template, but we don't need to replace the node.
+                    tpl = Handlebars.compile($el.html());
+
+                    this.log('Accepting the content of the element as our template.');
+                } else {
+                    // TODO: support more template types.
+                }
+
+                this.tpl = tpl;
+                this._compiledTemplate = true;
+            }
+        }
+
+
+        return this._super($el, delegate);
     },
 
     //bind: function() {
@@ -130,6 +222,8 @@ Ts.View = Backbone.View.extend({
         }
 
         $.extend(this, args);
+
+        this.subviews = this.subviews || {};
 
         if (listeners) {
             var globalScope = _.result(args.listeners, 'scope') || _.result(this.listeners, 'scope') || this;
@@ -244,6 +338,11 @@ Ts.View = Backbone.View.extend({
         }, this);
 
         this.trigger('initialized');
+
+        if (this.autorender) {
+            this.render();
+        }
+
         return this;
     },
 
@@ -261,16 +360,92 @@ Ts.View = Backbone.View.extend({
      * @param view
      * @param selector
      */
-    assignView : function(view, selector) {
-        view.setElement(this.$(selector)).render();
+    refreshView : function(selector, view) {
+        var selectors;
+
+        if (_.isObject(selector)) {
+            selectors = selector;
+        } else {
+            selectors = {};
+            selectors[selector] = view;
+        }
+
+        if (!selectors) {
+            return;
+        }
+
+        _.each(selectors, function(view, selector) {
+            var corrected = selector.startsWith('!');
+
+            if (corrected) {
+                selector = selector.substring(1);
+            }
+
+            var $el = this.$(selector);
+
+            if (!$el || !$el.length) {
+                this.logger().warn('Could not find child by selector "' + selector + '"');
+            }
+
+            if (!corrected) {
+                // We need to attach to the parent.
+                var $child = $(view.el);
+
+                // Contains only accepts DOM nodes...
+                if (!$.contains($el[0], $child[0])) {
+                    this.log('render child append');
+                    $el.append($child);
+                } else {
+                    this.log('render chlid NOT append', $child[0]);
+                }
+
+                view.render();
+            } else {
+                view.setElement($el).render();
+            }
+        }, this);
+    },
+
+    /**
+     * Assign a subview to a part of our dom.
+     *
+     * @param {String} selector
+     * @param {View} view
+     */
+    subview: function(selector, view) {
+        var selectors;
+
+        if (_.isObject(selector)) {
+            selectors = selector;
+        } else {
+            selectors = {};
+            selectors[selector] = view;
+        }
+
+        if (!selectors) {
+            return;
+        }
+
+        _.extend(this.subviews, selectors);
     },
 
     render: function() {
         this.beforeRender();
         this._render();
+        this._renderSubviews();
         this.afterRender();
 
         return this;
+    },
+
+    _renderSubviews: function() {
+        if (!this.subviews) {
+            return;
+        }
+
+        _.each(this.subviews, function(subview, selector) {
+            this.refreshView(selector, subview);
+        }, this);
     },
 
     beforeRender: function() {
@@ -278,13 +453,31 @@ Ts.View = Backbone.View.extend({
     },
 
     _render: function() {
-        this.$el.html(this.applyTemplate());
+        var html = this.applyTemplate();
+
+        if (!_.isUndefined(html)) {
+            this.$el.html(html);
+        }
+
+        this.$el.attr('id', this.cid);
+
+        if (this.xtype) {
+            this.$el.attr('xtype', this.xtype);
+        }
+
+        this.$el.attr('data-rendered', 'true');
+        this.$el.attr('data-rendered-timestamp', Date.now());
 
         return this;
     },
 
     applyTemplate: function() {
         var tpl = this.getTemplate();
+
+        if (!tpl) {
+            return;
+        }
+
         var args = this.getTemplateArgs();
 
         return tpl(args);
@@ -301,12 +494,22 @@ Ts.View = Backbone.View.extend({
      */
     initEl: function() {},
 
-    getTemplateArgs : function() {
+    getModel: function() {
         if (this.model) {
-            if (_.isFunction(this.model.toJSON)) {
-                return this.model.toJSON();
+            return this.model;
+        } else {
+            return this;
+        }
+    },
+
+    getTemplateArgs : function() {
+        var model = this.getModel();
+
+        if (model) {
+            if (_.isFunction(model.toJSON)) {
+                return model.toJSON();
             } else {
-                return this.model;
+                return model;
             }
         } else {
             return this;
@@ -316,7 +519,7 @@ Ts.View = Backbone.View.extend({
     getTemplate: function() {
         if (!this.tpl) {
             // No rendering needed if we have no template.
-            return Handlebars.compile('');
+            return null;
         }
 
         if (_.isFunction(this.tpl)) {
@@ -395,8 +598,10 @@ Ts.View = Backbone.View.extend({
 }, {
     extend: function(child) {
         var view = Backbone.View.extend.apply(this, arguments);
+
         view.prototype.listeners = _.extend({}, this.prototype.listeners, child.listeners);
         view.prototype.events = _.extend({}, this.prototype.events, child.events);
+
         return view;
     }
 });
@@ -443,6 +648,8 @@ Ts.Modal = Ts.View.extend({
          */
         _config: undefined,
 
+        xtype: 'Object',
+
         /**
          * @private
          * @constructor
@@ -450,10 +657,25 @@ Ts.Modal = Ts.View.extend({
         initialize: function(args) {
             // The original config.
             this._config = args;
-
+            this.cid = _.uniqueId('plugin_');
             this.beforeInitialize(args);
             this.init(args);
             this.afterInitialize();
+        },
+
+        log: function() {
+            var logger = this.logger();
+                logger.debug.apply(logger, arguments);
+            return this;
+        },
+
+        logger: function() {
+            if (!this._logger_instance) {
+                var name = this.xtype + '#' + this.cid + '';
+                this._logger_instance = Ts.Logger(name);
+            }
+
+            return this._logger_instance;
         },
 
         /**
@@ -515,6 +737,7 @@ Ts.Modal = Ts.View.extend({
 }());
 
 /**
+ * @class Plugin
  * @class Ts.Plugin
  * @extends Ts.Object
  */
@@ -558,6 +781,24 @@ Ts.Plugin = Ts.Object.extend({
      * an object to host plugins but cannot make it a Plugin itself.
      */
     pluginHostMode: false,
+
+    xtype: 'Plugin',
+
+    init: function() {
+        this._super();
+
+        var items = _.result(this, 'items', []);
+
+        if (!_.isArray(items)) {
+            if (_.isObject(items)) {
+                items = [items];
+            } else {
+                items = [];
+            }
+        }
+
+        this._items = items;
+    },
 
     /**
      * Children are initialized before the parent (though they can intercept this via events)
@@ -661,19 +902,6 @@ Ts.Plugin = Ts.Object.extend({
      */
     beforeAttach: function() {
         this.trigger('beforeAttach');
-
-        var items = _.result(this, 'items', []);
-
-        if (!_.isArray(items)) {
-            if (_.isObject(items)) {
-                items = [items];
-            } else {
-                items = [];
-            }
-        }
-
-        this._items = items;
-
         return this;
     },
 
@@ -746,6 +974,6 @@ Ts.Plugin = Ts.Object.extend({
         } else {
             return this;
         }
-    },
+    }
 
 });

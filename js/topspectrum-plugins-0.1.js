@@ -17,6 +17,7 @@ function assert(e) {
         return fn;
     };
 
+
     /**
      * Null-safe way to get the first element from an array.
      */
@@ -209,6 +210,18 @@ function assert(e) {
             fn.call(scope, arguments);
         });
     }
+
+    $.fn.equals = function(compareTo) {
+        if (!compareTo || this.length != compareTo.length) {
+            return false;
+        }
+        for (var i = 0; i < this.length; ++i) {
+            if (this[i] !== compareTo[i]) {
+                return false;
+            }
+        }
+        return true;
+    };
 
 }(jQuery));
 
