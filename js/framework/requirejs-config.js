@@ -225,6 +225,10 @@ requirejs.config({
             exports: 'Backgrid'
         },
 
+        'selectize' : {
+            deps: ['css!//cdn.feedback/js/selectize/0.12.1/selectize.default.css']
+        },
+
         "backgrid/select-all": ['backgrid']
     },
 
@@ -241,7 +245,6 @@ requirejs.config({
         'validator': '//cdn.feedback/js/customized/validator-0.8.0',
         'mousetrap': '//cdn.feedback/js/mousetrap.min',
         'text': '//cdn.feedback/js/framework/lib/text',
-
 
         'reviews': '../app/reviews',
         'AutowirePlugin': '//cdn.feedback/js/framework/plugins/AutowirePlugin',
@@ -264,6 +267,12 @@ requirejs.config({
         location: '//cdn.feedback/js/framework/lib',
         main: 'hbs'
     }],
+
+    map: {
+        '*': {
+            'css': 'https://cdnjs.cloudflare.com/ajax/libs/require-css/0.1.8/css.js'
+        }
+    },
 
     hbs: {
         templateExtension: ".html"

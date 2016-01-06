@@ -11,6 +11,8 @@ define(['require', 'jquery', 'underscore', 'Ts'], function (require, $, _, Ts) {
          */
         model: null,
 
+        tagName: 'modal',
+
         $modal: null,
 
         removeOnHide: false,
