@@ -65,6 +65,14 @@ var Ts = {
 
         checkVersion: function(suggestedVersion) {},
 
+        checkExists: function(value, msg) {
+            if (!value) {
+                throw msg || 'The value passed in did not exist.';
+            }
+
+            return value;
+        },
+
         /**
          * Throws an exception if the type of the input does not match the expected type.
          * Will work for undefined if you pass in undefined for the expectedType.
@@ -104,6 +112,30 @@ var Ts = {
             } else {
                 throw 'Incorrect type. Was ' + type + ' and expected ' + expectedType;
             }
+        }
+    },
+
+    Logger: function(name) {
+        if (!this.__loggered) {
+            this.__loggered = true;
+
+            if (window.Logger) {
+                window.Logger.useDefaults();
+            }
+        }
+
+        if (window.Logger) {
+            return window.Logger.get(name);
+        } else if (window.console) {
+            return window.console;
+        }
+
+        return {
+            info: function() {},
+            warn: function() {},
+            error: function() {},
+            log: function() {},
+            debug: function() {}
         }
     },
 

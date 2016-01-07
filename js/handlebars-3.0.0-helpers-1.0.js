@@ -104,6 +104,10 @@
         ));
     });
 
+    Handlebars.registerHelper('json', function(value) {
+        return JSON.stringify(value);
+    });
+
     return eR;
 
 }));
