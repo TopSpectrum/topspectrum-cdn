@@ -694,7 +694,7 @@ Ts.Modal = Ts.View.extend({
 
 /**
  * @class Plugin
- * @class Ts.Plugin
+ * @alias Ts.Plugin
  * @extends Ts.Object
  */
 Ts.Plugin = Ts.Object.extend({
