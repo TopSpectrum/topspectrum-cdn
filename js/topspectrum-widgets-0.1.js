@@ -179,7 +179,7 @@ Ts.View = Backbone.View.extend({
         $.extend(this, args);
 
         this.__subviews = {
-            items: [],
+            instances: [],
             assignments: {
 
             }
@@ -267,7 +267,7 @@ Ts.View = Backbone.View.extend({
 
         // The args/config are already applied to us on lines above.
         $.applyIf(this, {
-            items: [],
+            instances: [],
             plugins: []
         });
 
@@ -367,7 +367,26 @@ Ts.View = Backbone.View.extend({
     },
 
     addSubview: function (view) {
-        this.__subviews.items.push(view);
+        this.__subviews.instances.push(view);
+        this.log('view added: ', view);
+        this.listenTo(view, 'removed', function () {
+            // This view was removed.
+            this.log('view removed: ', view);
+
+            // Let's delete it from our instances list
+            this.__subviews.instances = _.without(this.__subviews.instances, view);
+            // Damn, now we have to SEARCH for our selector..
+            _.each(this.__subviews.assignments, function (this_view, selector) {
+                debugger;
+
+                if (this_view === view) {
+                    // They are the same.
+                    delete this.__subviews.assignments[selector];
+                }
+            }, this);
+        });
+
+        return view;
     },
 
     /**
@@ -392,13 +411,14 @@ Ts.View = Backbone.View.extend({
 
         // Let's make sure that they are already registered.
         _.each(selectors, function(view, selector) {
-            debugger;
-            if (this.__subviews.items.indexOf(view) == -1) {
-                this.__subviews.items.push(view);
+            if (this.__subviews.instances.indexOf(view) == -1) {
+                this.__subviews.instances.push(view);
             }
         }, this);
 
         _.extend(this.__subviews.assignments, selectors);
+
+        return view || selector;
     },
 
     render: function () {
@@ -411,11 +431,11 @@ Ts.View = Backbone.View.extend({
     },
 
     _renderSubviews: function () {
-        if (!this.subviewAssignments) {
+        if (!this.__subviews) {
             return;
         }
 
-        _.each(this.subviewAssignments, function (subview, selector) {
+        _.each(this.__subviews.assignments, function (subview, selector) {
             this.refreshView(selector, subview);
         }, this);
     },
@@ -465,6 +485,7 @@ Ts.View = Backbone.View.extend({
      * This is where you should attach your event listeners. It happens during render.
      */
     initEl: function () {
+
     },
 
     getModel: function () {
@@ -526,10 +547,9 @@ Ts.View = Backbone.View.extend({
 
     remove: function () {
         if (this.__subviews) {
-            var subviews = this.__subviews;
-            var items = this.__subviews.items;
+            var instances = this.__subviews.instances;
 
-            _.each(items, function (subview) {
+            _.each(instances, function (subview) {
                 if (subview && _.isFunction(subview.remove)) {
                     subview.remove.apply(subview, arguments);
                 }
@@ -537,11 +557,10 @@ Ts.View = Backbone.View.extend({
 
             // Clear the array. Recommended solution online.
             // http://stackoverflow.com/questions/1232040/how-do-i-empty-an-array-in-javascript
-            this.__subviews.items.length = 0;
+            this.__subviews.instances.length = 0;
             this.__subviews.assignments = {};
+            delete this.__subviews;
         }
-
-        delete this.__subviews;
 
         if (this.plugins) {
             _.each(this.plugins, function (plugin) {
