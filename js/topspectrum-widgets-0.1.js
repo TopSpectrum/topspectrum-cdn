@@ -38,7 +38,7 @@ Ts.View = Backbone.View.extend({
     /**
      * @type Object
      */
-    subviews: undefined,
+    __subviews: undefined,
 
     rendered: false,
 
@@ -178,7 +178,12 @@ Ts.View = Backbone.View.extend({
 
         $.extend(this, args);
 
-        this.subviews = this.subviews || {};
+        this.__subviews = {
+            items: [],
+            assignments: {
+
+            }
+        };
 
         if (listeners) {
             var globalScope = _.result(args.listeners, 'scope') || _.result(this.listeners, 'scope') || this;
@@ -361,13 +366,17 @@ Ts.View = Backbone.View.extend({
         }, this);
     },
 
+    addSubview: function (view) {
+        this.__subviews.items.push(view);
+    },
+
     /**
      * Assign a subview to a part of our dom.
      *
-     * @param {String} selector
+     * @param {String|Object} selector
      * @param {View} view
      */
-    subview: function (selector, view) {
+    assignSubview: function (selector, view) {
         var selectors;
 
         if (_.isObject(selector)) {
@@ -381,7 +390,15 @@ Ts.View = Backbone.View.extend({
             return;
         }
 
-        _.extend(this.subviews, selectors);
+        // Let's make sure that they are already registered.
+        _.each(selectors, function(view, selector) {
+            debugger;
+            if (this.__subviews.items.indexOf(view) == -1) {
+                this.__subviews.items.push(view);
+            }
+        }, this);
+
+        _.extend(this.__subviews.assignments, selectors);
     },
 
     render: function () {
@@ -394,11 +411,11 @@ Ts.View = Backbone.View.extend({
     },
 
     _renderSubviews: function () {
-        if (!this.subviews) {
+        if (!this.subviewAssignments) {
             return;
         }
 
-        _.each(this.subviews, function (subview, selector) {
+        _.each(this.subviewAssignments, function (subview, selector) {
             this.refreshView(selector, subview);
         }, this);
     },
@@ -508,8 +525,11 @@ Ts.View = Backbone.View.extend({
     },
 
     remove: function () {
-        if (this.items) {
-            _.each(this.items, function (subview) {
+        if (this.__subviews) {
+            var subviews = this.__subviews;
+            var items = this.__subviews.items;
+
+            _.each(items, function (subview) {
                 if (subview && _.isFunction(subview.remove)) {
                     subview.remove.apply(subview, arguments);
                 }
@@ -517,8 +537,11 @@ Ts.View = Backbone.View.extend({
 
             // Clear the array. Recommended solution online.
             // http://stackoverflow.com/questions/1232040/how-do-i-empty-an-array-in-javascript
-            this.items.length = 0;
+            this.__subviews.items.length = 0;
+            this.__subviews.assignments = {};
         }
+
+        delete this.__subviews;
 
         if (this.plugins) {
             _.each(this.plugins, function (plugin) {
@@ -535,7 +558,7 @@ Ts.View = Backbone.View.extend({
         // This will call stopListening()
         Backbone.View.prototype.remove.apply(this, arguments);
 
-        delete this.items;
+        delete this.__subviews;
         delete this.plugins;
         delete this.model;
         delete this.tpl;
@@ -545,10 +568,6 @@ Ts.View = Backbone.View.extend({
         delete this.rendered;
 
         return this;
-    },
-
-    addSubview: function (view) {
-        this.items.push(view);
     }
 
 });

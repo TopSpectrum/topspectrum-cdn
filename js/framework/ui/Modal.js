@@ -24,6 +24,8 @@ define(['require', 'jquery', 'underscore', 'Ts'], function (require, $, _, Ts) {
             'hidden.bs.modal': 'onModalHidden'
         },
 
+        _hide_promise: undefined,
+
         //templateArgs: function() {
         //    return (this.model && this.model.toJSON) ? this.model.toJSON() : this.model;
         //},
@@ -80,6 +82,7 @@ define(['require', 'jquery', 'underscore', 'Ts'], function (require, $, _, Ts) {
 
         remove: function () {
             if (this.isShown()) {
+                this.removeOnHide = true;
                 this.hide();
             } else if (this.isAttached()) {
                 Ts.View.prototype.remove.apply(this, arguments);
@@ -147,6 +150,7 @@ define(['require', 'jquery', 'underscore', 'Ts'], function (require, $, _, Ts) {
 
         onModalHidden: function () {
             this.trigger('hidden');
+            debugger;
             if (this.removeOnHide) {
                 this.remove();
             }
