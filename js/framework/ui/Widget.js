@@ -1,5 +1,5 @@
 define(
-    ['jquery', 'underscore', 'Ts', 'app/View', 'app/Plugin'],
+    ['jquery', 'underscore', 'Ts', 'ui/View', 'app/Plugin'],
     /**
      *
      * @param {jQuery} $

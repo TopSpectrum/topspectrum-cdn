@@ -1,8 +1,8 @@
-define ('document', [], function() {
+define('document', [], function () {
     return document;
 });
 
-define ('window', [], function() {
+define('window', [], function () {
     return window;
 });
 
@@ -26,11 +26,11 @@ define('Ts', function () {
     return Ts;
 });
 
-define('jstz', function() {
+define('jstz', function () {
     return jstz;
 });
 
-define('moment', ['jstz'], function(jstz) {
+define('moment', ['jstz'], function (jstz) {
     moment.CUR_TIMEZONE = jstz.determine().name();
     moment.tz.setDefault(moment.CUR_TIMEZONE);
 
@@ -45,7 +45,7 @@ define('Handlebars', ['moment'], function (moment) {
         ago: "ago"
     };
 
-    Handlebars.registerHelper('ifImageAttachment', function(options) {
+    Handlebars.registerHelper('ifImageAttachment', function (options) {
         var attachment = this;
 
         var mimeType = attachment.mediaType;
@@ -57,7 +57,7 @@ define('Handlebars', ['moment'], function (moment) {
     });
 
     // Use UI.registerHelper..
-    Handlebars.registerHelper("formatDate", function(datetime, format) {
+    Handlebars.registerHelper("formatDate", function (datetime, format) {
         if (!datetime) {
             return datetime;
         }
@@ -115,7 +115,7 @@ define('Handlebars', ['moment'], function (moment) {
     return Handlebars;
 });
 
-define('handlebars', ['Handlebars'], function(Handlebars) {
+define('handlebars', ['Handlebars'], function (Handlebars) {
     return Handlebars;
 });
 
@@ -225,7 +225,7 @@ requirejs.config({
             exports: 'Backgrid'
         },
 
-        'selectize' : {
+        'selectize': {
             deps: ['css!//cdn.feedback/js/selectize/0.12.1/selectize.default.css']
         },
 
@@ -236,8 +236,8 @@ requirejs.config({
         'app': '../app',
         'backgrid': '//cdn.feedback/js/backgrid/0.3.5/backgrid',
         'backgrid/select-all': '//cdn.feedback/js/backgrid/0.3.5/backgrid.extension.selectall',
-        'sifter':'//cdn.feedback/js/sifter-0.4.5.min',
-        'microplugin':'//cdn.feedback/js/microplugin-0.0.3.min',
+        'sifter': '//cdn.feedback/js/sifter-0.4.5.min',
+        'microplugin': '//cdn.feedback/js/microplugin-0.0.3.min',
         'jscroll': '//cdn.feedback/js/jquery.jscroll-2.3.4',
         'jqueryui': '//cdn.feedback/js/jquery-ui-1.11.4',
         'position-calculator': '//cdn.feedback/js/position-calculator-1.1.2',
@@ -277,5 +277,100 @@ requirejs.config({
     hbs: {
         templateExtension: ".html"
     }
+});
 
+
+/**
+ * Taken from: http://www.hiddentao.com/archives/2011/06/23/requirejs-with-progress-indicator/
+ */
+window.require_proxy = {
+    i: 0,
+    start: function() {},
+    stop: function() {},
+    incr: function() {
+        this.i++;
+
+        if (1 === this.i) {
+            this.start();
+        }
+    },
+
+    decr: function() {
+        this.i--;
+
+        if (0 >= this.i) {
+            this.i = 0;
+            this.stop();
+        }
+    }
+};
+
+window.require = (function () {
+    var orig_require = window.require;
+
+    return function (_list, _callback) {
+        var callback_fn = function (_args) {
+            _callback.apply(null, _args);
+        };
+
+        window.require_proxy.incr();
+
+        orig_require.call(null, _list, function () {
+            try {
+                window.require_proxy.decr();
+            } finally {
+                callback_fn(arguments);
+            }
+        });
+    }
+})();
+
+
+window.define = (function () {
+    var fn = window.define;
+    var result = function (functionArrayOrString, arrayOrFunctionOrUndefined, functionOrUndefined) {
+
+        window.require_proxy.incr();
+
+        var scope = this;
+
+        function wrapper(fn2) {
+            var args = _.rest(arguments, 1);
+            var result = fn2.apply(scope, args);
+
+            window.require_proxy.decr();
+
+            return result;
+        }
+
+        if (_.isFunction(functionArrayOrString)) {
+            var f = _.wrap(functionArrayOrString, wrapper);
+
+            return fn.call(null, f);
+        } else if (_.isFunction(arrayOrFunctionOrUndefined)) {
+            var f = _.wrap(arrayOrFunctionOrUndefined, wrapper);
+
+            return fn.call(null, functionArrayOrString, f);
+        } else if (_.isFunction(functionOrUndefined)) {
+            var f = _.wrap(functionOrUndefined, wrapper);
+
+            return fn.call(null, functionArrayOrString, arrayOrFunctionOrUndefined, f);
+        }
+    };
+
+    result.amd = window.define.amd;
+
+    return result;
+})();
+
+$(document).ready(function() {
+    require(['jquery', 'app/Application'], function($, Application) {
+        window.require_proxy.start = function() {
+            Application.trigger('requirejs:start');
+        };
+
+        window.require_proxy.stop = function() {
+            Application.trigger('requirejs:stop');
+        };
+    });
 });
