@@ -341,7 +341,6 @@ window.define = (function () {
 
             window.require_proxy.decr();
 
-            console.log('returning', result);
             return result;
         }
 
