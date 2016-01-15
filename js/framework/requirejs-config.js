@@ -253,12 +253,11 @@ requirejs.config({
         'app/Model': '//cdn.feedback/js/framework/app/Model',
         'app/Collection': '//cdn.feedback/js/framework/app/Collection',
         'app/Plugin': '//cdn.feedback/js/framework/app/Plugin',
-        'app/Widget': '//cdn.feedback/js/framework/ui/Widget',
         'app/Feature': '//cdn.feedback/js/framework/app/Feature',
         'app/Application': '//cdn.feedback/js/framework/app/Application',
-        'app/View': '//cdn.feedback/js/framework/ui/View',
 
         'ui/View': '//cdn.feedback/js/framework/ui/View',
+        'ui/Widget': '//cdn.feedback/js/framework/ui/Widget',
         'ui/Modal': '//cdn.feedback/js/framework/ui/Modal'
     },
 
@@ -325,9 +324,11 @@ window.require = (function () {
     }
 })();
 
-
 window.define = (function () {
     var fn = window.define;
+
+    window.bullshit = fn;
+
     var result = function (functionArrayOrString, arrayOrFunctionOrUndefined, functionOrUndefined) {
 
         window.require_proxy.incr();
@@ -340,6 +341,7 @@ window.define = (function () {
 
             window.require_proxy.decr();
 
+            console.log('returning', result);
             return result;
         }
 
