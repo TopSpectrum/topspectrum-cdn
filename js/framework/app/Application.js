@@ -12,7 +12,18 @@ define(['underscore', 'Ts'], function(_, Ts) {
         },
 
         setProfile: function(profile) {
-            this.profile = profile;
+            if (!profile) {
+                this.profile.clear();
+            } else {
+                this.profile.clear({silent: true});
+
+                if (profile.toJSON) {
+                    this.profile.set(profile.toJSON());
+                } else {
+                    this.profile.set(profile);
+                }
+            }
+
             this.trigger('loggedin');
         },
 
@@ -53,6 +64,10 @@ define(['underscore', 'Ts'], function(_, Ts) {
             var deferred = $.Deferred();
 
             require([ xtype ], function(Plugin) {
+                if (!Plugin) {
+                    throw 'The require statement did not return a plugin: ' + xtype;
+                }
+
                 // Instantiate a new instance with the given config.
                 var result = new Plugin(cfg);
                 scope.log('creating plugin', cfg, JSON.stringify(cfg));
@@ -73,7 +88,7 @@ define(['underscore', 'Ts'], function(_, Ts) {
      * Instantiate the Singleton.
      */
     var app = new Application({
-        profile: window.profile
+        profile: new Backbone.Model(window.profile)
     });
 
     app.addPlugin('AutowirePlugin');

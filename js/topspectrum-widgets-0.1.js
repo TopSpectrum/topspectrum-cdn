@@ -821,6 +821,7 @@ Ts.Plugin = Ts.Object.extend({
             child.attach(this.__get_parent());
         }, this);
 
+        this.onAttach();
         this.afterAttach();
 
         return this;
@@ -889,6 +890,8 @@ Ts.Plugin = Ts.Object.extend({
         this.trigger('afterAttach');
         return this;
     },
+
+    onAttach: function() {},
 
     /**
      * @private
