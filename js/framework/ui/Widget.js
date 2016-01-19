@@ -140,8 +140,8 @@ define(
                 }
 
                 // Copy over the important ones. Should this be centralized?
-                this.models.profile = Application.profile;
-                this.models.site = Application.site;
+                this.models.profile = this.parent.profile;
+                this.models.site = this.parent.site;
             },
 
             start: function () {

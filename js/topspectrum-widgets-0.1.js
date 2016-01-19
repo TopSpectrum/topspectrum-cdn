@@ -353,10 +353,10 @@ Ts.View = Backbone.View.extend({
 
                 // Contains only accepts DOM nodes...
                 if (!$.contains($el[0], $child[0])) {
-                    this.log('render child append');
+                    //this.log('render child append');
                     $el.append($child);
                 } else {
-                    this.log('render chlid NOT append', $child[0]);
+                    //this.log('render child NOT append', $child[0]);
                 }
 
                 view.render();
