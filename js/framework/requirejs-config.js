@@ -233,7 +233,12 @@ requirejs.config({
     },
 
     paths: {
+        // Maybe in prod this should be:  'app': '../app-built'
         'app': '../app',
+
+        'reviews': '../app/reviews', // This is misplaced and belongs in default.feedback
+
+        // Supporting utilities
         'backgrid': '//cdn.feedback/js/backgrid/0.3.5/backgrid',
         'backgrid/select-all': '//cdn.feedback/js/backgrid/0.3.5/backgrid.extension.selectall',
         'sifter': '//cdn.feedback/js/sifter-0.4.5.min',
@@ -246,10 +251,11 @@ requirejs.config({
         'mousetrap': '//cdn.feedback/js/mousetrap.min',
         'text': '//cdn.feedback/js/framework/lib/text',
 
-        'reviews': '../app/reviews',
+        // common-plugins.js
         'AutowirePlugin': '//cdn.feedback/js/framework/plugins/AutowirePlugin',
         'HotkeyShimPlugin': '//cdn.feedback/js/framework/plugins/HotkeyShimPlugin',
 
+        // "framework.js"
         'app/Model': '//cdn.feedback/js/framework/app/Model',
         'app/Collection': '//cdn.feedback/js/framework/app/Collection',
         'app/Plugin': '//cdn.feedback/js/framework/app/Plugin',
@@ -277,7 +283,6 @@ requirejs.config({
         templateExtension: ".html"
     }
 });
-
 
 /**
  * Taken from: http://www.hiddentao.com/archives/2011/06/23/requirejs-with-progress-indicator/
