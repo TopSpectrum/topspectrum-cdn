@@ -151,15 +151,19 @@ define(
             }
         });
 
-        var DateCell = Backgrid.DateCell.extend({
+        function upgrade(Class) {
+            return Class.extend({
+                initialize: function(options) {
+                    this._super(options);
 
-            initialize: function(options) {
-                this._super(options);
+                    this.$el.addClass(this.column.attributes.className);
+                }
+            });
+        }
 
-                this.$el.addClass(this.column.attributes.className);
-            }
-
-        });
+        var DateCell = upgrade(Backgrid.DateCell);
+        var StringCell = upgrade(Backgrid.StringCell);
+        var NumberCell = upgrade(Backgrid.NumberCell);
 
         var Grid = Backgrid.Grid.extend({
             initialize: function(options) {
@@ -173,12 +177,30 @@ define(
             }
         });
 
-        Backgrid.Cell = TemplateCell;
-        Backgrid.DateCell = DateCell;
         Backgrid.Row = SingleSelectRow;
         Backgrid.Grid = Grid;
         Backgrid.HeaderCell = HeaderCell;
         Backgrid.HeaderRow = HeaderRow;
+
+        Backgrid.Cell = TemplateCell;
+        Backgrid.DateCell = DateCell;
+        Backgrid.StringCell = StringCell;
+        Backgrid.NumberCell = NumberCell;
+
+        //Backgrid.resolveNameToClass = function (name, suffix) {
+        //    if (_.isString(name)) {
+        //        var key = _.map(name.split('-'), function (e) {
+        //                return e.slice(0, 1).toUpperCase() + e.slice(1);
+        //            }).join('') + suffix;
+        //        var klass = Backgrid[key] || Backgrid.Extension[key];
+        //        if (_.isUndefined(klass)) {
+        //            throw new ReferenceError("Class '" + key + "' not found");
+        //        }
+        //        return klass;
+        //    }
+        //
+        //    return name;
+        //};
 
         return Backgrid;
     });

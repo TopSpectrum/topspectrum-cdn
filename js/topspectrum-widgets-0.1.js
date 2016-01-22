@@ -477,6 +477,7 @@ Ts.View = Backbone.View.extend({
 
     afterRender: function () {
         this.initEl();
+
         this.rendered = true;
         this.trigger('afterRender');
     },
@@ -485,7 +486,9 @@ Ts.View = Backbone.View.extend({
      * This is where you should attach your event listeners. It happens during render.
      */
     initEl: function () {
-
+        if (this.cls) {
+            this.$el.addClass(this.cls);
+        }
     },
 
     getModel: function () {
