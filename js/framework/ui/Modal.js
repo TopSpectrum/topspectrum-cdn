@@ -31,6 +31,8 @@ define(['require', 'jquery', 'underscore', 'Ts'], function (require, $, _, Ts) {
          */
         removeOnHide: false,
 
+        shouldPreventHide: false,
+
         /**
          * @public
          * @cfg {Boolean}
@@ -58,7 +60,8 @@ define(['require', 'jquery', 'underscore', 'Ts'], function (require, $, _, Ts) {
             'click [data-modal-action="hide"]': 'hide',
 
             'shown.bs.modal': 'onModalShown',
-            'hidden.bs.modal': 'onModalHidden'
+            'hidden.bs.modal': 'onModalHidden',
+            'hide.bs.modal.prevent': 'onShouldPreventHide'
         },
 
         /**
@@ -73,6 +76,12 @@ define(['require', 'jquery', 'underscore', 'Ts'], function (require, $, _, Ts) {
                 backdrop: this.backdrop,
                 show: false
             });
+        },
+
+        onShouldPreventHide: function(e) {
+            if (this.shouldPreventHide) {
+                e.preventDefault();
+            }
         },
 
         /**

@@ -265,7 +265,8 @@ requirejs.config({
         'ui/View': '//cdn.feedback/js/framework/ui/View',
         'ui/Widget': '//cdn.feedback/js/framework/ui/Widget',
         'ui/Modal': '//cdn.feedback/js/framework/ui/Modal',
-        'ui/Grid': '//cdn.feedback/js/framework/ui/Grid'
+        'ui/Grid': '//cdn.feedback/js/framework/ui/Grid',
+        'ui/Action': '//cdn.feedback/js/framework/ui/Action'
     },
 
     packages: [{
