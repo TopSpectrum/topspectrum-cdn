@@ -38,7 +38,7 @@ define(['jquery', 'underscore', 'app/Plugin', 'app/Application'], function ($, _
             };
 
             var that = this;
-            $(window.document.body).on('click', '[data-action]', function (e) {
+            $(window.document.body).on('click', '[data-action][data-action-handler]', function (e) {
                 e.preventDefault();
 
                 var $actionEl = $(e.currentTarget);
