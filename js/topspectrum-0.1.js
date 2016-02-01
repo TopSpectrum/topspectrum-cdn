@@ -127,7 +127,44 @@ var Ts = {
         if (window.Logger) {
             return window.Logger.get(name);
         } else if (window.console) {
-            return window.console;
+            var logger = function (level, fn) {
+
+                return function () {
+                    // https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#3-managing-arguments
+                    // http://stackoverflow.com/questions/8073673/how-can-i-add-new-array-elements-at-the-beginning-of-an-array-in-javascript
+                    /**
+                     *
+                     * @param {Array} __arguments
+                     * @returns {Array}
+                     * @constructor
+                     */
+                    function INLINE_SLICE(__arguments) {
+                        //.length is just an integer, this doesn't leak
+                        //the arguments object itself
+                        var args = new Array(__arguments.length);
+                        for (var i = 0; i < args.length; ++i) {
+                            //i is always valid index in the arguments object
+                            args[i] = __arguments[i];
+                        }
+                        return args;
+                    }
+
+                    var clone = INLINE_SLICE(arguments);
+                    clone.unshift('[' + level + '] [' + name + ']');
+
+                    fn.apply(window.console, clone);
+
+                    return this;
+                }
+            };
+
+            return {
+                info: logger('info', console.info),
+                warn: logger('warn', console.warn),
+                error: logger('error', console.error),
+                log: logger('log', console.log),
+                debug: logger('debug', console.log)
+            };
         }
 
         return {

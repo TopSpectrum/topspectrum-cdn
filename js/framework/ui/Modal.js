@@ -3,88 +3,131 @@ define(['require', 'jquery', 'underscore', 'Ts'], function (require, $, _, Ts) {
     /**
      * @class Model
      * @alias app.Modal
+     * @extends View
      */
     var Modal = Ts.View.extend({
 
         /**
+         * @private
+         */
+        tagName: 'modal',
+
+        /**
+         * @public
+         * @type String
+         */
+        xtype: 'Modal',
+
+        /**
          * @cfg {Backbone.Model} The model for this class.
+         * @public
          */
         model: null,
 
-        tagName: 'modal',
+        /**
+         * @public
+         * @cfg {Boolean}
+         * @type Boolean
+         */
+        removeOnHide: false,
+
+        shouldPreventHide: false,
+
+        /**
+         * @public
+         * @cfg {Boolean}
+         * @type Boolean
+         */
+        backdrop: true,
+
+        /**
+         * @public
+         * @cfg {Boolean}
+         * @type Boolean
+         */
+        keyboard: true,
+
+        /**
+         * @private
+         * @type $.Deferred
+         */
+        _hide_deferred: undefined,
 
         $modal: null,
 
-        removeOnHide: false,
-        allowHideOnClick: true,
-
         events: {
-            'click [data-action="close"]': 'onHideClick',
+            'click [data-modal-action="close"]': 'remove',
+            'click [data-modal-action="hide"]': 'hide',
+
             'shown.bs.modal': 'onModalShown',
-            'hidden.bs.modal': 'onModalHidden'
+            'hidden.bs.modal': 'onModalHidden',
+            'hide.bs.modal.prevent': 'onShouldPreventHide'
         },
 
-        //templateArgs: function() {
-        //    return (this.model && this.model.toJSON) ? this.model.toJSON() : this.model;
-        //},
-        //
-        //applyTemplate: function() {
-        //    return this.template(_.isFunction(this.templateArgs) ? this.templateArgs() : this.templateArgs);
-        //},
+        /**
+         * @protected
+         */
+        initEl: function () {
+            this._super();
 
-        afterRender: function () {
-            this.initModalEl();
-
-            Ts.View.prototype.afterRender.apply(this, arguments);
+            this.$modal = this.$('.modal');
+            this.$modal.modal({
+                keyboard: this.keyboard,
+                backdrop: this.backdrop,
+                show: false
+            });
         },
 
-        initModalEl: function () {
-            this.$modal = this.$el.find('.modal');
-            this.$modal.modal();
-        },
-
-        onHideClick: function () {
-            if (this.allowHideOnClick) {
-                this.hide();
+        onShouldPreventHide: function(e) {
+            if (this.shouldPreventHide) {
+                e.preventDefault();
             }
         },
 
         /**
-         * Alias for remove.
+         * Async call
+         *
+         * @returns {*}
          */
         hide: function () {
-            this.beforeHide();
-            this._hide();
-            this.afterHide();
-        },
-
-        _hide: function() {
-            if (this.isShown()) {
-                this.$modal.modal('hide');
+            // If we were "in the process
+            if (this._hide_deferred) {
+                return this._hide_deferred.promise();
             }
-        },
 
-        beforeHide: function() {
-            this.trigger('beforeHide');
-            return this;
-        },
+            var deferred = this._hide_deferred = $.Deferred();
 
-        /**
-         * This is NOT called after the Modal animates away. It is called immediately after the Hide method is called.
-         * If you want to listen for "after the modal finishes animating away" you should override
-         * onModalHidden or onModelShown.
-         */
-        afterHide: function() {
-            this.trigger('afterHide');
+            {
+                if (this.isShown()) {
+                    this.$modal.modal('hide');
+                } else {
+                    if (this._hide_deferred) {
+                        // already hidden.
+                        this._hide_deferred.reject();
+                        delete this._hide_deferred;
+                    }
+                }
+
+                var promise = deferred.promise();
+                var scope = this;
+
+                // Auto clean up our reference.
+                promise.always(function () {
+                    delete scope._hide_deferred;
+                });
+            }
+
+            return promise;
         },
 
         remove: function () {
             if (this.isShown()) {
-                this.hide();
-            } else if (this.isAttached()) {
-                Ts.View.prototype.remove.apply(this, arguments);
+                this.hide()
+                    .done(function () {
+                        this.remove();
+                    });
             } else {
-                // Looks like we are already removed... Nothing to do here. Move along.
+                this._super();
             }
         },
 
@@ -138,7 +181,11 @@ define(['require', 'jquery', 'underscore', 'Ts'], function (require, $, _, Ts) {
                 return;
             }
 
-            this.$modal.modal('show');
+            this.$modal.modal({
+                backdrop: this.backdrop,
+                keyboard: this.keyboard,
+                show: true
+            });
         },
 
         afterShow: function() {
@@ -146,7 +193,13 @@ define(['require', 'jquery', 'underscore', 'Ts'], function (require, $, _, Ts) {
         },
 
         onModalHidden: function () {
+            if (this._hide_deferred) {
+                this._hide_deferred.resolveWith(this);
+                delete this._hide_deferred;
+            }
+
             this.trigger('hidden');
+
             if (this.removeOnHide) {
                 this.remove();
             }

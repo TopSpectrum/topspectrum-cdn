@@ -5,7 +5,6 @@ define(['backbone'], function(Backbone) {
      */
     var Model = Backbone.Model.extend({
 
-
         computed: undefined,
 
         initialize: function(){
@@ -48,6 +47,29 @@ define(['backbone'], function(Backbone) {
             fn.attributes = attributes;
 
         return fn;
+    };
+
+    Model.parse = function($modelEl) {
+        if (!$modelEl || !$modelEl.is('model')) {
+            throw 'Wrong model type';
+        }
+
+        var object = {};
+
+        function htmlDecode(input) {
+            var doc = new DOMParser().parseFromString(input, "text/html");
+            return doc.documentElement.textContent;
+        }
+
+        $modelEl.find('field').each(function() {
+            var $field = $(this);
+            var key = $field.attr('key');
+            var value = htmlDecode($field.html());
+
+            object[key] = value;
+        });
+
+        return new Backbone.Model(object);
     };
 
     return Model;

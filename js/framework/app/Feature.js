@@ -1,5 +1,6 @@
 define(
     ['underscore', 'backbone', 'jquery', 'Ts'],
+
     function (_, Backbone, $, Ts) {
 
         /**

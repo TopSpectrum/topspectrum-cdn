@@ -1,5 +1,5 @@
 define(
-    ['jquery', 'underscore', 'Ts', 'app/View', 'app/Plugin'],
+    ['jquery', 'underscore', 'Ts', 'ui/View', 'app/Plugin', 'app/Model'],
     /**
      *
      * @param {jQuery} $
@@ -7,9 +7,10 @@ define(
      * @param {Ts} Ts
      * @param {View} View
      * @param {Plugin} Plugin
+     * @param {Model} Model
      * @returns {*}
      */
-    function ($, _, Ts, View, Plugin) {
+    function ($, _, Ts, View, Plugin, Model) {
 
         /**
          * @class DefaultView
@@ -74,6 +75,12 @@ define(
             /**
              * @type Backbone.View
              */
+            viewType: undefined,
+
+            /**
+             * @type Backbone.View
+             * @private
+             */
             view: undefined,
 
             xtype: 'Widget',
@@ -83,27 +90,58 @@ define(
              */
             $el: undefined,
 
-            attach: function(parent) {
-                this._super(parent);
+            els: undefined,
+            models: undefined,
+
+            onAttach: function() {
+                this._super();
 
                 // Merge in our config. Just in case it already exists.
                 {
                     this.data = _.extend(_.result(this, 'data', {}), this.$el.data());
                 }
 
-                {
-                    var ViewClass = this.view || WidgetView;
-                    //var $children = this.$el.children();
+                if (this.els) {
+                    var $el = this.$el;
+                    this.log('Attaching elements:', this.els);
 
-                    var cfg = _.extend({}, {
-                        widget: this,
-                        parent: this,
-                        model: this.getViewModel(),
-                        el: this.$el
-                    });
+                    var obj = {};
+                    _.each(this.els, function(value, key) {
+                        var $target = $el.find(key);
+                        var required = true;
 
-                    this.view = new ViewClass(cfg);
+                        if (!$target || !$target.length) {
+                            throw 'Could not find by selector: ' + key;
+                        }
+
+                        this.log('Attaching ' + key + ' as ' + value + ': ', $target);
+                        obj[value] = $target;
+                    }, this);
+                    this.els = obj;
+
+                    this.log('Attached elements:', this.els);
                 }
+
+                if (this.models) {
+                    this.log('Attaching models:', this.models);
+
+                    var models = {};
+                    _.each(this.models, function(value, key) {
+                        var $el = this.$el.find(key);
+                        var model = Model.parse($el);
+
+                        models[value] = model;
+                    }, this);
+
+                    this.models = models;
+                    this.log('Attached models:', this.models);
+                } else {
+                    this.models = {};
+                }
+
+                // Copy over the important ones. Should this be centralized?
+                this.models.profile = this.parent.profile;
+                this.models.site = this.parent.site;
             },
 
             start: function () {
@@ -117,13 +155,35 @@ define(
                 this.render();
             },
 
+            getView: function() {
+                if (this.view) {
+                    return this.view;
+                }
+
+                {
+                    var ViewClass = this.viewType || Widget.View;
+
+                    this.view = new ViewClass(this.getViewOptions());
+                }
+
+                return this.view;
+            },
+
+            getViewOptions: function() {
+                return _.extend({}, {
+                    widget: this,
+                    parent: this,
+                    model: this.getViewModel(),
+                    el: this.$el
+                });
+            },
+
             getViewModel: function () {
                 return this.model;
             },
 
             render: function() {
-                this.logger().debug('render');
-                this.view.render();
+                this.getView().render();
 
                 return this;
             }

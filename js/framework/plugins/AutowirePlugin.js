@@ -8,6 +8,7 @@ define(['jquery', 'underscore', 'Ts'], function ($, _, Ts) {
         start: function () {
             this._super();
 
+            this.listenTo(this.parent, 'dom-changed', this.search);
             this.search();
         },
 
@@ -15,6 +16,11 @@ define(['jquery', 'underscore', 'Ts'], function ($, _, Ts) {
             /* @type Application */
             var parent = this.parent;
 
+            /**
+             *
+             * @param {String} name The name of package to require.
+             * @returns {Function}
+             */
             function defaults(name) {
 
                 return function() {
@@ -30,7 +36,7 @@ define(['jquery', 'underscore', 'Ts'], function ($, _, Ts) {
             // The default value is "feature"
             $('[data-feature][data-autowire!="false"]:not([data-autowired])').each(defaults('feature'));
             $('[data-widget][data-autowire!="false"]:not([data-autowired])').each(defaults('widget'));
-            $('[data-plugin][data-autowire!="false"]:not([data-autowired])').each(defaults('plugin'));
+            $('[data-plugin][data-autowire!="false"]:not([data-autowired])').each(defaults('app/Plugin'));
 
             function autowire(nodeName, path) {
                 var selector = nodeName + '[xtype]:not([data-autowire]):not([data-autowired])';
@@ -38,7 +44,6 @@ define(['jquery', 'underscore', 'Ts'], function ($, _, Ts) {
                 $(selector).each(function() {
                     var $el = $(this);
                     var xtype = $el.attr('xtype');
-
 
                     // Does it contain slashes already?
                     if (_.isString(xtype)) {
@@ -54,6 +59,7 @@ define(['jquery', 'underscore', 'Ts'], function ($, _, Ts) {
             autowire('widget', 'app/widgets/');
             autowire('feature', 'app/features/');
             autowire('view', 'app/views/');
+            autowire('action', 'app/actions/');
 
             var scope = this;
 

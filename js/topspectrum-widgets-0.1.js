@@ -38,7 +38,7 @@ Ts.View = Backbone.View.extend({
     /**
      * @type Object
      */
-    subviews: undefined,
+    __subviews: undefined,
 
     rendered: false,
 
@@ -178,7 +178,12 @@ Ts.View = Backbone.View.extend({
 
         $.extend(this, args);
 
-        this.subviews = this.subviews || {};
+        this.__subviews = {
+            instances: [],
+            assignments: {
+
+            }
+        };
 
         if (listeners) {
             var globalScope = _.result(args.listeners, 'scope') || _.result(this.listeners, 'scope') || this;
@@ -262,7 +267,7 @@ Ts.View = Backbone.View.extend({
 
         // The args/config are already applied to us on lines above.
         $.applyIf(this, {
-            items: [],
+            instances: [],
             plugins: []
         });
 
@@ -348,10 +353,10 @@ Ts.View = Backbone.View.extend({
 
                 // Contains only accepts DOM nodes...
                 if (!$.contains($el[0], $child[0])) {
-                    this.log('render child append');
+                    //this.log('render child append');
                     $el.append($child);
                 } else {
-                    this.log('render chlid NOT append', $child[0]);
+                    //this.log('render child NOT append', $child[0]);
                 }
 
                 view.render();
@@ -361,13 +366,36 @@ Ts.View = Backbone.View.extend({
         }, this);
     },
 
+    addSubview: function (view) {
+        this.__subviews.instances.push(view);
+        this.log('view added: ', view);
+        this.listenTo(view, 'removed', function () {
+            // This view was removed.
+            this.log('view removed: ', view);
+
+            // Let's delete it from our instances list
+            this.__subviews.instances = _.without(this.__subviews.instances, view);
+            // Damn, now we have to SEARCH for our selector..
+            _.each(this.__subviews.assignments, function (this_view, selector) {
+                debugger;
+
+                if (this_view === view) {
+                    // They are the same.
+                    delete this.__subviews.assignments[selector];
+                }
+            }, this);
+        });
+
+        return view;
+    },
+
     /**
      * Assign a subview to a part of our dom.
      *
-     * @param {String} selector
+     * @param {String|Object} selector
      * @param {View} view
      */
-    subview: function (selector, view) {
+    assignSubview: function (selector, view) {
         var selectors;
 
         if (_.isObject(selector)) {
@@ -381,7 +409,16 @@ Ts.View = Backbone.View.extend({
             return;
         }
 
-        _.extend(this.subviews, selectors);
+        // Let's make sure that they are already registered.
+        _.each(selectors, function(view, selector) {
+            if (this.__subviews.instances.indexOf(view) == -1) {
+                this.__subviews.instances.push(view);
+            }
+        }, this);
+
+        _.extend(this.__subviews.assignments, selectors);
+
+        return view || selector;
     },
 
     render: function () {
@@ -394,11 +431,11 @@ Ts.View = Backbone.View.extend({
     },
 
     _renderSubviews: function () {
-        if (!this.subviews) {
+        if (!this.__subviews) {
             return;
         }
 
-        _.each(this.subviews, function (subview, selector) {
+        _.each(this.__subviews.assignments, function (subview, selector) {
             this.refreshView(selector, subview);
         }, this);
     },
@@ -440,6 +477,7 @@ Ts.View = Backbone.View.extend({
 
     afterRender: function () {
         this.initEl();
+
         this.rendered = true;
         this.trigger('afterRender');
     },
@@ -448,6 +486,9 @@ Ts.View = Backbone.View.extend({
      * This is where you should attach your event listeners. It happens during render.
      */
     initEl: function () {
+        if (this.cls) {
+            this.$el.addClass(this.cls);
+        }
     },
 
     getModel: function () {
@@ -508,8 +549,10 @@ Ts.View = Backbone.View.extend({
     },
 
     remove: function () {
-        if (this.items) {
-            _.each(this.items, function (subview) {
+        if (this.__subviews) {
+            var instances = this.__subviews.instances;
+
+            _.each(instances, function (subview) {
                 if (subview && _.isFunction(subview.remove)) {
                     subview.remove.apply(subview, arguments);
                 }
@@ -517,7 +560,9 @@ Ts.View = Backbone.View.extend({
 
             // Clear the array. Recommended solution online.
             // http://stackoverflow.com/questions/1232040/how-do-i-empty-an-array-in-javascript
-            this.items.length = 0;
+            this.__subviews.instances.length = 0;
+            this.__subviews.assignments = {};
+            delete this.__subviews;
         }
 
         if (this.plugins) {
@@ -535,7 +580,7 @@ Ts.View = Backbone.View.extend({
         // This will call stopListening()
         Backbone.View.prototype.remove.apply(this, arguments);
 
-        delete this.items;
+        delete this.__subviews;
         delete this.plugins;
         delete this.model;
         delete this.tpl;
@@ -545,10 +590,6 @@ Ts.View = Backbone.View.extend({
         delete this.rendered;
 
         return this;
-    },
-
-    addSubview: function (view) {
-        this.items.push(view);
     }
 
 });
@@ -694,7 +735,7 @@ Ts.Modal = Ts.View.extend({
 
 /**
  * @class Plugin
- * @class Ts.Plugin
+ * @alias Ts.Plugin
  * @extends Ts.Object
  */
 Ts.Plugin = Ts.Object.extend({
@@ -783,6 +824,7 @@ Ts.Plugin = Ts.Object.extend({
             child.attach(this.__get_parent());
         }, this);
 
+        this.onAttach();
         this.afterAttach();
 
         return this;
@@ -851,6 +893,8 @@ Ts.Plugin = Ts.Object.extend({
         this.trigger('afterAttach');
         return this;
     },
+
+    onAttach: function() {},
 
     /**
      * @private
