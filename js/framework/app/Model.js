@@ -1,4 +1,4 @@
-define(['backbone'], function(Backbone) {
+define(['backbone', 'jquery'], function(Backbone, $) {
 
     /**
      * @class Model
@@ -61,12 +61,55 @@ define(['backbone'], function(Backbone) {
             return doc.documentElement.textContent;
         }
 
-        $modelEl.find('field').each(function() {
+        var strategies = {
+            html: function($field) {
+                return htmlDecode($field.html());
+            },
+            json: function($field) {
+                return JSON.parse(htmlDecode($field.html()));
+            },
+            data: function($field) {
+                return $field.data();
+            },
+            autodetect: function($field) {
+                var html = $field.html();
+                var data = $field.data();
+
+                if ($.isEmptyObject(data)) {
+                    data = null;
+                }
+
+                if (html) {
+                    if (data) {
+                        var result = { value: html };
+
+                        _.extend(result, data);
+
+                        return result;
+                    } else {
+                        return html;
+                    }
+                } else {
+                    if (data) {
+                        var result = _.extend({}, data);
+
+                        if (html) {
+                            _.extend(result, { value: html });
+                        }
+
+                        return result;
+                    }
+                }
+            }
+        };
+
+        $modelEl.find('property').each(function() {
             var $field = $(this);
             var key = $field.attr('key');
-            var value = htmlDecode($field.html());
+            var type = $field.attr('type') || 'autodetect';
+            var resolver = strategies[type];
 
-            object[key] = value;
+            object[key] = resolver($field);
         });
 
         return new Backbone.Model(object);
