@@ -472,7 +472,7 @@ Ts.View = Backbone.View.extend({
 
         var args = this.getTemplateArgs();
 
-        return tpl(args);
+        return tpl.call(this, args);
     },
 
     afterRender: function () {
