@@ -161,12 +161,16 @@ define(
                 }
 
                 {
-                    var ViewClass = this.viewType || Widget.View;
-
-                    this.view = new ViewClass(this.getViewOptions());
+                    this.view = this.createView();
                 }
 
                 return this.view;
+            },
+
+            createView: function() {
+                var ViewClass = this.viewType || Widget.View;
+
+                return new ViewClass(this.getViewOptions());
             },
 
             getViewOptions: function() {
@@ -179,7 +183,11 @@ define(
             },
 
             getViewModel: function () {
-                return this.model;
+                if (this.model) {
+                    return this.model;
+                }
+
+                return this.models;
             },
 
             render: function() {
