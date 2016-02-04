@@ -39,7 +39,7 @@ define(['jquery', 'underscore', 'Ts'], function ($, _, Ts) {
             $('[data-plugin][data-autowire!="false"]:not([data-autowired])').each(defaults('app/Plugin'));
 
             function autowire(nodeName, path) {
-                var selector = nodeName + '[xtype]:not([data-autowire]):not([data-autowired])';
+                var selector = nodeName + '[xtype]:not([data-autowire]):not([data-autowired]):not([data-rendered])';
 
                 $(selector).each(function() {
                     var $el = $(this);
