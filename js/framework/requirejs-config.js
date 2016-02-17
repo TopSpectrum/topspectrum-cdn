@@ -225,6 +225,27 @@ requirejs.config({
             exports: 'Backgrid'
         },
 
+        'fileupload': {
+            deps: [
+                'css!//cdn.feedback/js/jasny-bootstrap.min.css',
+                'jquery.fileupload-image',
+                'jquery.iframe-transport',
+                'canvas-to-blob',
+                'load-image',
+            ]
+        },
+
+        //'fileupload': {
+        //    deps: [
+        //        '//cdn.feedback/js/load-image.all.min.js',
+        //        '//cdn.feedback/js/canvas-to-blob.min.js',
+        //        '//cdn.feedback/js/jquery.iframe-transport.js',
+        //        '//cdn.feedback/js/jquery.fileupload.js',
+        //        '//cdn.feedback/js/jquery.fileupload-process.js',
+        //        '//cdn.feedback/js/jquery.fileupload-image.js'
+        //    ]
+        //},
+
         'selectize': {
             deps: ['css!//cdn.feedback/js/selectize/0.12.1/selectize.default.css']
         },
@@ -238,13 +259,33 @@ requirejs.config({
 
         'reviews': '../app/reviews', // This is misplaced and belongs in default.feedback
 
+        '//cdn.feedback/js/load-image.all.min.js' : '//cdn.feedback/js/load-image.all.min',
+        '//cdn.feedback/js/canvas-to-blob.min.js' : '//cdn.feedback/js/canvas-to-blob.min',
+        '//cdn.feedback/js/jquery.iframe-transport.js' : '//cdn.feedback/js/jquery.iframe-transport',
+        '//cdn.feedback/js/jquery.fileupload.js' : '//cdn.feedback/js/jquery.fileupload',
+        '//cdn.feedback/js/jquery.fileupload-process.js' : '//cdn.feedback/js/jquery.fileupload-process',
+        '//cdn.feedback/js/jquery.fileupload-image.js': '//cdn.feedback/js/jquery.fileupload-image',
+
+        'load-image-exif' : '//cdn.feedback/js/load-image-exif-2.1.0',
+        'load-image-ios' : '//cdn.feedback/js/load-image-ios-2.1.0',
+        'load-image-orientation' : '//cdn.feedback/js/load-image-orientation-2.1.0',
+        'load-image-meta' : '//cdn.feedback/js/load-image-meta-2.1.0',
+        'load-image' : '//cdn.feedback/js/load-image-2.1.0',
+        'jquery.fileupload' : '//cdn.feedback/js/jquery.fileupload',
+        'jquery.fileupload-image': '//cdn.feedback/js/jquery.fileupload-image',
+        'jquery.fileupload-process' : '//cdn.feedback/js/jquery.fileupload-process',
+        'fileupload' : '//cdn.feedback/js/jquery.fileupload-validate',
+        'jquery.iframe-transport': '//cdn.feedback/js/jquery.iframe-transport',
+        'canvas-to-blob' : '//cdn.feedback/js/canvas-to-blob.min',
+
         // Supporting utilities
         'backgrid': '//cdn.feedback/js/backgrid/0.3.5/backgrid',
         'backgrid/select-all': '//cdn.feedback/js/backgrid/0.3.5/backgrid.extension.selectall',
         'sifter': '//cdn.feedback/js/sifter-0.4.5.min',
-        'microplugin': '//cdn.feedback/js/microplugin-0.0.3.min',
+        'microplugin': '//cdn.feedbload-imageack/js/microplugin-0.0.3.min',
         'jscroll': '//cdn.feedback/js/jquery.jscroll-2.3.4',
         'jqueryui': '//cdn.feedback/js/jquery-ui-1.11.4',
+        'jquery.ui.widget': '//cdn.feedback/js/jquery.ui.widget-1.11.4',
         'position-calculator': '//cdn.feedback/js/position-calculator-1.1.2',
         'selectize': '//cdn.feedback/js/selectize/0.12.1/selectize.standalone',
         'validator': '//cdn.feedback/js/customized/validator-0.8.0',
@@ -262,6 +303,8 @@ requirejs.config({
         'app/Feature': '//cdn.feedback/js/framework/app/Feature',
         'app/Application': '//cdn.feedback/js/framework/app/Application',
 
+        'bluebird': '//cdn.jsdelivr.net/bluebird/latest/bluebird.core.min',
+        'Promise': '//cdn.jsdelivr.net/bluebird/latest/bluebird.core.min',
         'ui/View': '//cdn.feedback/js/framework/ui/View',
         'ui/Widget': '//cdn.feedback/js/framework/ui/Widget',
         'ui/Modal': '//cdn.feedback/js/framework/ui/Modal',
