@@ -74,7 +74,6 @@ define(
             }
         });
 
-
         var SingleSelectRow = Backgrid.Row.extend({
 
             selected: false,
@@ -83,7 +82,15 @@ define(
                 'click' : 'click'
             },
 
-            click: function() {
+            click: function(e) {
+                if (!this.selected) {
+                    var $el = $(e.target);
+
+                    if ($el.is('.btn') || $el.closest('.btn').length > 0) {
+                        return;
+                    }
+                }
+
                 this.selected = !this.selected;
 
                 // Our row was clicked. We need to throw an event saying we were clicked.
@@ -93,7 +100,9 @@ define(
             initialize: function(options) {
                 this._super(options);
 
+
                 if (this.model && this.model.collection) {
+                    //this.listenTo(this.model, "backgrid:row:expand", this.expandRowMaybe);
                     this.listenTo(this.model.collection, 'backgrid:selected', function(model, selected) {
                         var their_id = (model) ? (model.id || model.cid) : null;
                         var my_id = this.model.id || this.model.cid;
@@ -104,6 +113,7 @@ define(
                             if (!this.selected) {
                                 return;
                             } else {
+
                                 // Turn ourselves off...
                                 this.selected = false;
                             }
@@ -114,15 +124,25 @@ define(
                         this.refreshSelectedIndicator();
                     });
                 }
-
             },
 
             refreshSelectedIndicator: function() {
+                var selected = this.$el.hasClass('selected');
+                var changed = this.selected !== selected;
+
                 if (this.selected) {
                     this.$el.addClass('selected');
                 } else {
                     this.$el.removeClass('selected');
                 }
+
+                if (changed) {
+                    this.selectedDidChange();
+                }
+            },
+
+            selectedDidChange: function() {
+
             },
 
             /**
