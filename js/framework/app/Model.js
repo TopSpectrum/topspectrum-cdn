@@ -1,4 +1,6 @@
-define(['backbone', 'jquery'], function(Backbone, $) {
+'use strict';
+
+define(['backbone', 'jquery'], function (Backbone, $) {
 
     /**
      * @class Model
@@ -7,28 +9,28 @@ define(['backbone', 'jquery'], function(Backbone, $) {
 
         computed: undefined,
 
-        initialize: function(){
+        initialize: function () {
 
             // Let's build the
-            this.on('change', function(){
+            this.on('change', function () {
                 var i, changedAttributes = this.changedAttributes() || [];
-                _.each(this.attributes, function(value, key){
-                    if( _.isFunction(value) && _.isArray(value.attributes) ) {
-                        for(i in value.attributes) {
-                            if ( _.has(changedAttributes, value.attributes[i]) ) {
-                                this.trigger("change:"+key);
-                                return ;
+                _.each(this.attributes, function (value, key) {
+                    if (_.isFunction(value) && _.isArray(value.attributes)) {
+                        for (i in value.attributes) {
+                            if (_.has(changedAttributes, value.attributes[i])) {
+                                this.trigger("change:" + key);
+                                return;
                             }
                         }
                     }
                 }, this);
             }, this);
         },
-        get: function(attr) {
+        get: function (attr) {
             var value = Backbone.Model.prototype.get.call(this, attr);
             return _.isFunction(value) ? value.call(this) : value;
         },
-        toJSON: function() {
+        toJSON: function () {
             var json = Backbone.Model.prototype.toJSON.apply(this, arguments);
             _.each(json, function (value, key) {
                 if (typeof value == 'function') {
@@ -39,17 +41,17 @@ define(['backbone', 'jquery'], function(Backbone, $) {
         }
     });
 
-    Model.computed = function() {
+    Model.computed = function () {
         // varargs string
         var len = arguments.length;
         var attributes = _.head(arguments, len - 1);
         var fn = _.last(arguments);
-            fn.attributes = attributes;
+        fn.attributes = attributes;
 
         return fn;
     };
 
-    Model.parse = function($modelEl) {
+    Model.parse = function ($modelEl) {
         if (!$modelEl || !$modelEl.is('model')) {
             throw 'Wrong model type';
         }
@@ -61,19 +63,51 @@ define(['backbone', 'jquery'], function(Backbone, $) {
             return doc.documentElement.textContent;
         }
 
-        var strategies = {
-            html: function($field) {
-                return htmlDecode($field.html());
+        var decoders = {
+            html: function (value) {
+                if (!value) {
+                    return null;
+                }
+
+                return htmlDecode(value);
             },
-            json: function($field) {
-                return JSON.parse(htmlDecode($field.html()));
+
+            json: function (value) {
+                if (!value) {
+                    return null;
+                }
+
+                return JSON.parse(htmlDecode(value));
             },
-            data: function($field) {
-                return $field.data();
+
+            none: function (value) {
+                return value;
             },
-            autodetect: function($field) {
+
+            string: function (value) {
+                return value;
+            },
+
+            url: function (value) {
+                return value;
+            },
+
+            hidden: function (value) {
+                return value;
+            }
+        };
+
+        /**
+         *
+         * @param {jQuery} $field
+         * @returns {Object}
+         */
+        function resolver($field) {
+
+            function readSpec($field) {
                 var html = $field.html();
                 var data = $field.data();
+                var result;
 
                 if ($.isEmptyObject(data)) {
                     data = null;
@@ -81,35 +115,76 @@ define(['backbone', 'jquery'], function(Backbone, $) {
 
                 if (html) {
                     if (data) {
-                        var result = { value: html };
-
-                        _.extend(result, data);
-
-                        return result;
+                        return _.extend({
+                            value: html
+                        }, data);
                     } else {
                         return html;
                     }
                 } else {
                     if (data) {
-                        var result = _.extend({}, data);
+                        result = _.extend({}, data);
 
                         if (html) {
-                            _.extend(result, { value: html });
+                            _.extend(result, {
+                                value: html
+                            });
                         }
 
                         return result;
                     }
                 }
             }
-        };
 
-        $modelEl.find('property').each(function() {
+            var spec = readSpec($field);
+
+            if (spec) {
+                /**
+                 * @type {function}
+                 */
+                var decoder = decoders[spec.type || 'none'];
+
+                if (!decoder) {
+                    throw new Error('Could not find decoder for ' + spec.type);
+                }
+
+                if (spec.value) {
+                    spec.value = decoder(spec.value);
+                } else {
+                    spec = decoder(spec);
+                }
+            }
+
+            return spec;
+        }
+
+        /**
+         *
+         * @param {null|Object} spec
+         * @param {undefined|String} spec.type
+         * @param {undefined|String} spec.value
+         * @param {undefined|String} spec.encoding
+         * @returns {null|Object}
+         */
+        function decoder(spec) {
+            if (!spec) {
+                return spec;
+            }
+
+            if ('json' === spec.encoding) {
+                spec.value = JSON.parse(spec.value);
+            }
+
+            return spec;
+        }
+
+        $modelEl.find('property').each(function () {
             var $field = $(this);
             var key = $field.attr('key');
             var type = $field.attr('type') || 'autodetect';
-            var resolver = strategies[type];
+            var spec = resolver($field);
 
-            object[key] = resolver($field);
+            object[key] = decoder(spec);
         });
 
         return new Backbone.Model(object);

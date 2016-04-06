@@ -477,7 +477,7 @@ Ts.View = Backbone.View.extend({
 
     afterRender: function () {
         this.initEl();
-
+        
         this.rendered = true;
         this.trigger('afterRender');
     },
