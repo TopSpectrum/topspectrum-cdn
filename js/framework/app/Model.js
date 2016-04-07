@@ -1,6 +1,15 @@
 'use strict';
 
-define(['backbone', 'jquery'], function (Backbone, $) {
+define(['underscore', 'backbone', 'jquery'],
+
+    /**
+     *
+     * @param {underscore} _
+     * @param {Backbone} Backbone
+     * @param {jQuery} $
+     * @returns {*}
+     */
+    function (_, Backbone, $) {
 
     /**
      * @class Model
@@ -77,7 +86,18 @@ define(['backbone', 'jquery'], function (Backbone, $) {
                     return null;
                 }
 
-                return JSON.parse(htmlDecode(value));
+                if (!_.isString(value)) {
+                    debugger;
+                }
+
+                value = htmlDecode(value);
+                if (_.isString(value)) {
+                    return JSON.parse(value);
+
+                } else {
+                    debugger;
+                }
+
             },
 
             none: function (value) {
@@ -151,7 +171,9 @@ define(['backbone', 'jquery'], function (Backbone, $) {
                 if (spec.value) {
                     spec.value = decoder(spec.value);
                 } else {
-                    spec = decoder(spec);
+                    if (_.isString(spec)) { // TODO: support numbers?
+                        spec = decoder(spec);
+                    }
                 }
             }
 
