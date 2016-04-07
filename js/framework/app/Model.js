@@ -97,7 +97,10 @@ define(['underscore', 'backbone', 'jquery'],
                 } else {
                     debugger;
                 }
+            },
 
+            boolean: function(value) {
+                return !!value;
             },
 
             none: function (value) {
