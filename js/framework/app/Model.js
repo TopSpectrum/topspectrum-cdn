@@ -100,6 +100,12 @@ define(['underscore', 'backbone', 'jquery'],
             },
 
             boolean: function(value) {
+                if ('false' === value) {
+                    return false;
+                } else if ('true' === value) {
+                    return true;
+                }
+
                 return !!value;
             },
 
