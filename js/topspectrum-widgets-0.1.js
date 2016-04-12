@@ -377,8 +377,6 @@ Ts.View = Backbone.View.extend({
             this.__subviews.instances = _.without(this.__subviews.instances, view);
             // Damn, now we have to SEARCH for our selector..
             _.each(this.__subviews.assignments, function (this_view, selector) {
-                debugger;
-
                 if (this_view === view) {
                     // They are the same.
                     delete this.__subviews.assignments[selector];
@@ -524,7 +522,7 @@ Ts.View = Backbone.View.extend({
         } else if (_.isString(this.tpl)) {
             this.tpl = Handlebars.compile(this.tpl);
         } else if (_.isArray(this.tpl)) {
-            this.tpl = Handlebars.compile(this.tpl.join(' '));
+            this.tpl = Handlebars.compile(this.tpl.join(''));
         } else {
             throw 'Unknown template type ' + this.tpl
         }
