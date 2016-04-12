@@ -55,7 +55,7 @@ define('Handlebars', ['moment'], function (moment) {
 
         return options.fn(this);
     });
-
+    
     // Use UI.registerHelper..
     Handlebars.registerHelper("formatDate", function (datetime, format) {
         if (!datetime) {
