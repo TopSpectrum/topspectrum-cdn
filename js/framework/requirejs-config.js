@@ -281,6 +281,7 @@ requirejs.config({
         // Supporting utilities
         'backgrid': '//cdn.feedback/js/backgrid/0.3.5/backgrid',
         'backgrid/select-all': '//cdn.feedback/js/backgrid/0.3.5/backgrid.extension.selectall',
+        'backbone.pageable': '//cdn.feedback/js/backbone.paginator-2.0.0',
         'sifter': '//cdn.feedback/js/sifter-0.4.5.min',
         'microplugin': '//cdn.feedbload-imageack/js/microplugin-0.0.3.min',
         'jscroll': '//cdn.feedback/js/jquery.jscroll-2.3.4',

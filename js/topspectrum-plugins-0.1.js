@@ -226,7 +226,7 @@ function assert(e) {
 }(jQuery));
 
 (function ($) {
-
+    
     $.formData = function ($form) {
         var paramObj = {};
         $.each($form.serializeArray(), function (_, kv) {

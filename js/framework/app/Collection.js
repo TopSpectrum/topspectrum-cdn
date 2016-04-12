@@ -1,4 +1,4 @@
-define(['backbone'], function(Backbone) {
+define(['backbone', 'backbone.pageable', 'underscore'], function(Backbone, pageable, _) {
 
     /**
      * This class is spring-paging-compatible and strictly Backbone.Collection compatible.
@@ -16,6 +16,10 @@ define(['backbone'], function(Backbone) {
         },
 
         parseRecords: function(resp, options) {
+            if (_.isArray(resp)) {
+                return resp;
+            }
+
             return resp.content;
         },
 
