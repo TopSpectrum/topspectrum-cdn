@@ -199,7 +199,7 @@ define(['require', 'jquery', 'underscore', 'Ts'], function (require, $, _, Ts) {
             }
 
             this.trigger('hidden');
-
+            
             if (this.removeOnHide) {
                 this.remove();
             }
