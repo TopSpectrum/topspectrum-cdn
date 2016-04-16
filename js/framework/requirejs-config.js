@@ -225,6 +225,10 @@ requirejs.config({
             exports: 'Backgrid'
         },
 
+        'bootstrap-rating': {
+            deps: ['jquery']
+        },
+
         'fileupload': {
             deps: [
                 'css!//cdn.feedback/js/jasny-bootstrap.min.css',
@@ -289,6 +293,7 @@ requirejs.config({
         'jquery.ui.widget': '//cdn.feedback/js/jquery.ui.widget-1.11.4',
         'position-calculator': '//cdn.feedback/js/position-calculator-1.1.2',
         'selectize': '//cdn.feedback/js/selectize/0.12.1/selectize.standalone',
+        'bootstrap-rating': '//cdn.feedback/js/bootstrap-rating',
         'validator': '//cdn.feedback/js/customized/validator-0.8.0',
         'mousetrap': '//cdn.feedback/js/mousetrap.min',
         'text': '//cdn.feedback/js/framework/lib/text',
