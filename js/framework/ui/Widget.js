@@ -128,9 +128,13 @@ define(
                     var models = {};
                     _.each(this.models, function(value, key) {
                         var $el = this.$el.find(key);
-                        var model = Model.parse($el);
+                        if (!$el || !$el.length) {
+                            // NOTE: I needed to allow undefined models. Though I'm concerned this might cause bugs.
+                            this.log('Could not find Model: ' + key);
+                            return;
+                        }
 
-                        models[value] = model;
+                        models[value] = Model.parse($el);
                     }, this);
 
                     this.models = models;
