@@ -298,7 +298,7 @@ requirejs.config({
         'mousetrap': '//cdn.feedback/js/mousetrap.min',
         'text': '//cdn.feedback/js/framework/lib/text',
 
-        'gmap': '//cdn.feedback/js/googlemaps',
+        // 'gmap': '//cdn.feedback/js/googlemaps',
 
         // common-plugins.js
         'AutowirePlugin': '//cdn.feedback/js/framework/plugins/AutowirePlugin',
