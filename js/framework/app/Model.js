@@ -121,6 +121,10 @@ define(['underscore', 'backbone', 'jquery'],
                 return value;
             },
 
+            number: function(value) {
+                return parseFloat(value);
+            },
+
             hidden: function (value) {
                 return value;
             }
