@@ -225,6 +225,10 @@ requirejs.config({
             exports: 'Backgrid'
         },
 
+        url: {
+            exports: 'Url'
+        },
+
         'bootstrap-rating': {
             deps: ['jquery']
         },
@@ -298,6 +302,7 @@ requirejs.config({
         'mousetrap': '//cdn.feedback/js/mousetrap.min',
         'text': '//cdn.feedback/js/framework/lib/text',
 
+        'url': '//cdn.feedback/js/url-2.1.0.min',
         // 'gmap': '//cdn.feedback/js/googlemaps',
 
         // common-plugins.js
