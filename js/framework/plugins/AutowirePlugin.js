@@ -7,7 +7,7 @@ define(['jquery', 'underscore', 'Ts'], function ($, _, Ts) {
 
         start: function () {
             this._super();
-
+            
             this.listenTo(this.parent, 'dom-changed', this.search);
             this.search();
         },
@@ -105,6 +105,7 @@ define(['jquery', 'underscore', 'Ts'], function ($, _, Ts) {
                     });
             });
 
+            console.log($els);
         }
     });
 });

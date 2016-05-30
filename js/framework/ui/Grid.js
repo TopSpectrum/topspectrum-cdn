@@ -47,14 +47,15 @@ define(
              */
             render: function () {
                 this.$el.empty();
-                var model = this.model;
-
                 var template = this.template();
                 var args = this.templateArgs();
                 this.$el.html(template(args));
-                //this.delegateEvents(); // this is unneeded.
+                // this.delegateEvents(); // this is unneeded.
+                this.initEl();
                 return this;
             },
+
+            initEl: function() {},
 
             templateArgs: function () {
                 var model = this.model;
@@ -80,21 +81,6 @@ define(
 
             events: {
                 'click' : 'click'
-            },
-
-            click: function(e) {
-                if (!this.selected) {
-                    var $el = $(e.target);
-
-                    if ($el.is('.btn') || $el.closest('.btn').length > 0) {
-                        return;
-                    }
-                }
-
-                this.selected = !this.selected;
-
-                // Our row was clicked. We need to throw an event saying we were clicked.
-                this.model.trigger('backgrid:selected', this.model, this.selected);
             },
 
             initialize: function(options) {
@@ -124,6 +110,21 @@ define(
                         this.refreshSelectedIndicator();
                     });
                 }
+            },
+
+            click: function(e) {
+                if (!this.selected) {
+                    var $el = $(e.target);
+
+                    if ($el.is('.btn') || $el.closest('.btn').length > 0) {
+                        return;
+                    }
+                }
+
+                this.selected = !this.selected;
+
+                // Our row was clicked. We need to throw an event saying we were clicked.
+                this.model.trigger('backgrid:selected', this.model, this.selected);
             },
 
             refreshSelectedIndicator: function() {

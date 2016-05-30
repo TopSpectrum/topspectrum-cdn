@@ -22,9 +22,11 @@ define('Backbone', function () {
     return Backbone;
 });
 
-define('Ts', function () {
-    return Ts;
-});
+if (window.Ts) {
+    define('Ts', function () {
+        return window.Ts;
+    });
+}
 
 define('jstz', function () {
     return jstz;
@@ -285,6 +287,8 @@ requirejs.config({
         'fileupload' : '//cdn.feedback/js/jquery.fileupload-validate',
         'jquery.iframe-transport': '//cdn.feedback/js/jquery.iframe-transport',
         'canvas-to-blob' : '//cdn.feedback/js/canvas-to-blob.min',
+        // 'jstz' : '//cdn.feedback/js/jstz-1.0.4.min',
+        // 'moment' : '//cdn.feedback/js/moment-2.9.0.min',
 
         // Supporting utilities
         'backgrid': '//cdn.feedback/js/backgrid/0.3.5/backgrid',
@@ -301,6 +305,8 @@ requirejs.config({
         'validator': '//cdn.feedback/js/customized/validator-0.8.0',
         'mousetrap': '//cdn.feedback/js/mousetrap.min',
         'text': '//cdn.feedback/js/framework/lib/text',
+
+        'Ts': '//cdn.feedback/js/topspectrum-0.1',
 
         'url': '//cdn.feedback/js/url-2.1.0.min',
         // 'gmap': '//cdn.feedback/js/googlemaps',
@@ -367,74 +373,78 @@ window.require_proxy = {
     }
 };
 
-window.require = (function () {
-    var orig_require = window.require;
+if (window.require) {
+    window.require = (function () {
+        var orig_require = window.require;
 
-    return function (_list, _callback) {
-        var callback_fn = function (_args) {
-            _callback.apply(null, _args);
-        };
+        return function (_list, _callback) {
+            var callback_fn = function (_args) {
+                _callback.apply(null, _args);
+            };
 
-        window.require_proxy.incr();
+            window.require_proxy.incr();
 
-        orig_require.call(null, _list, function () {
-            try {
+            orig_require.call(null, _list, function () {
+                try {
+                    window.require_proxy.decr();
+                } finally {
+                    callback_fn(arguments);
+                }
+            });
+        }
+    })();
+}
+
+if (window.define) {
+    window.define = (function () {
+        var fn = window.define;
+
+        window.bullshit = fn;
+
+        var result = function (functionArrayOrString, arrayOrFunctionOrUndefined, functionOrUndefined) {
+
+            window.require_proxy.incr();
+
+            var scope = this;
+
+            function wrapper(fn2) {
+                var args = _.rest(arguments, 1);
+                var result = fn2.apply(scope, args);
+
                 window.require_proxy.decr();
-            } finally {
-                callback_fn(arguments);
+
+                return result;
             }
-        });
-    }
-})();
 
-window.define = (function () {
-    var fn = window.define;
+            if (_.isFunction(functionArrayOrString)) {
+                var f = _.wrap(functionArrayOrString, wrapper);
 
-    window.bullshit = fn;
+                return fn.call(null, f);
+            } else if (_.isFunction(arrayOrFunctionOrUndefined)) {
+                var f = _.wrap(arrayOrFunctionOrUndefined, wrapper);
 
-    var result = function (functionArrayOrString, arrayOrFunctionOrUndefined, functionOrUndefined) {
+                return fn.call(null, functionArrayOrString, f);
+            } else if (_.isFunction(functionOrUndefined)) {
+                var f = _.wrap(functionOrUndefined, wrapper);
 
-        window.require_proxy.incr();
-
-        var scope = this;
-
-        function wrapper(fn2) {
-            var args = _.rest(arguments, 1);
-            var result = fn2.apply(scope, args);
-
-            window.require_proxy.decr();
-
-            return result;
-        }
-
-        if (_.isFunction(functionArrayOrString)) {
-            var f = _.wrap(functionArrayOrString, wrapper);
-
-            return fn.call(null, f);
-        } else if (_.isFunction(arrayOrFunctionOrUndefined)) {
-            var f = _.wrap(arrayOrFunctionOrUndefined, wrapper);
-
-            return fn.call(null, functionArrayOrString, f);
-        } else if (_.isFunction(functionOrUndefined)) {
-            var f = _.wrap(functionOrUndefined, wrapper);
-
-            return fn.call(null, functionArrayOrString, arrayOrFunctionOrUndefined, f);
-        }
-    };
-
-    result.amd = window.define.amd;
-
-    return result;
-})();
-
-$(document).ready(function() {
-    require(['jquery', 'app/Application'], function($, Application) {
-        window.require_proxy.start = function() {
-            Application.trigger('requirejs:start');
+                return fn.call(null, functionArrayOrString, arrayOrFunctionOrUndefined, f);
+            }
         };
 
-        window.require_proxy.stop = function() {
-            Application.trigger('requirejs:stop');
-        };
-    });
-});
+        result.amd = window.define.amd;
+
+        return result;
+    })();
+}
+
+// $(document).ready(function() {
+//     require(['jquery', 'app/Application'], function($, Application) {
+//         window.require_proxy.start = function() {
+//             Application.trigger('requirejs:start');
+//         };
+//
+//         window.require_proxy.stop = function() {
+//             Application.trigger('requirejs:stop');
+//         };
+//     });
+// });
