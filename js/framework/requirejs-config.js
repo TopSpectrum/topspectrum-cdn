@@ -284,6 +284,8 @@ requirejs.config({
         '//cdn.feedback/js/jquery.fileupload-process.js' : '//cdn.feedback/js/jquery.fileupload-process',
         '//cdn.feedback/js/jquery.fileupload-image.js': '//cdn.feedback/js/jquery.fileupload-image',
 
+        'spinner': '//cdn.feedback/js/spin.min',
+
         'load-image-exif' : '//cdn.feedback/js/load-image-exif-2.1.0',
         'load-image-ios' : '//cdn.feedback/js/load-image-ios-2.1.0',
         'load-image-orientation' : '//cdn.feedback/js/load-image-orientation-2.1.0',
