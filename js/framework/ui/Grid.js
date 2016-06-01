@@ -80,12 +80,12 @@ define(
             selected: false,
 
             events: {
-                'click' : 'click'
+                'click' : 'click',
+                'click [data-action]' : 'broadcastAction'
             },
 
             initialize: function(options) {
                 this._super(options);
-
 
                 if (this.model && this.model.collection) {
                     //this.listenTo(this.model, "backgrid:row:expand", this.expandRowMaybe);
@@ -113,10 +113,15 @@ define(
             },
 
             click: function(e) {
-                if (!this.selected) {
-                    var $el = $(e.target);
+                var $row = $(e.currentTarget);
+                var $clicked = $(e.target);
 
-                    if ($el.is('.btn') || $el.closest('.btn').length > 0) {
+                if (e.isDefaultPrevented() || ($clicked.attr('data-action'))) {
+                    return;
+                }
+
+                if (!this.selected) {
+                    if ($clicked.is('.btn') || $clicked.closest('.btn').length > 0) {
                         return;
                     }
                 }
@@ -125,6 +130,14 @@ define(
 
                 // Our row was clicked. We need to throw an event saying we were clicked.
                 this.model.trigger('backgrid:selected', this.model, this.selected);
+            },
+
+            broadcastAction: function(e) {
+                var $el = $(e.currentTarget);
+                var actionName = $el.attr('data-action');
+
+                this.model.trigger('backgrid:action', this, actionName);
+                this.model.trigger('backgrid:action:' + actionName, this);
             },
 
             refreshSelectedIndicator: function() {

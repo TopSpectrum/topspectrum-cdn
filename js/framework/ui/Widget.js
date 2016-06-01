@@ -159,6 +159,16 @@ define(
                 this.render();
             },
 
+            showSpinner: function () {
+                this.view.$el.attr('data-loading', true);
+                this.log('show');
+            },
+
+            hideSpinner: function () {
+                this.view.$el.removeAttr('data-loading');
+                this.log('hide');
+            },
+
             getView: function() {
                 if (this.view) {
                     return this.view;
