@@ -46,6 +46,16 @@ Ts.View = Backbone.View.extend({
 
     items: null,
 
+    /**
+     * @private
+     * @type {Plugin}
+     */
+    pluginHost: null,
+
+    /**
+     * @private
+     * @type {Array}
+     */
     plugins: null,
 
     /**
@@ -271,12 +281,25 @@ Ts.View = Backbone.View.extend({
             plugins: []
         });
 
+        // We want to host plugins.
+        this.pluginHost = new Ts.Plugin({
+            pluginHostMode: true
+        });
+
         // We need to init the plugins.
         _.each(this.plugins, function (plugin) {
-            plugin.attach(this);
+            this.pluginHost.addPlugin(plugin);
         }, this);
 
         return this;
+    },
+
+    /**
+     *
+     * @param {String|Plugin|Array<String|Plugin>} pluginOrArrayOrString
+     */
+    addPlugin: function(pluginOrArrayOrString) {
+        this.pluginHost.addPlugin(pluginOrArrayOrString);
     },
 
     /**
@@ -293,9 +316,8 @@ Ts.View = Backbone.View.extend({
         }
 
         // We need to init the plugins.
-        _.each(this.plugins, function (plugin) {
-            plugin.start();
-        }, this);
+        this.pluginHost.attach(this);
+        this.pluginHost.start();
 
         this.trigger('initialized');
 
