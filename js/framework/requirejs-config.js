@@ -326,6 +326,7 @@ requirejs.config({
         'HotkeyShimPlugin': '//cdn.feedback/js/framework/plugins/HotkeyShimPlugin',
 
         // "framework.js"
+        'app/Object': '//cdn.feedback/js/framework/app/Object',
         'app/Model': '//cdn.feedback/js/framework/app/Model',
         'app/Collection': '//cdn.feedback/js/framework/app/Collection',
         'app/Plugin': '//cdn.feedback/js/framework/app/Plugin',
@@ -338,7 +339,8 @@ requirejs.config({
         'ui/Widget': '//cdn.feedback/js/framework/ui/Widget',
         'ui/Modal': '//cdn.feedback/js/framework/ui/Modal',
         'ui/Grid': '//cdn.feedback/js/framework/ui/Grid',
-        'ui/Action': '//cdn.feedback/js/framework/ui/Action'
+        'ui/Action': '//cdn.feedback/js/framework/ui/Action',
+        'ui/Bindings': '//cdn.feedback/js/framework/ui/Bindings'
     },
 
     packages: [{
