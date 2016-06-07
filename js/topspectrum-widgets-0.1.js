@@ -190,9 +190,7 @@ Ts.View = Backbone.View.extend({
 
         this.__subviews = {
             instances: [],
-            assignments: {
-
-            }
+            assignments: {}
         };
 
         if (listeners) {
@@ -298,7 +296,7 @@ Ts.View = Backbone.View.extend({
      *
      * @param {String|Plugin|Array<String|Plugin>} pluginOrArrayOrString
      */
-    addPlugin: function(pluginOrArrayOrString) {
+    addPlugin: function (pluginOrArrayOrString) {
         this.pluginHost.addPlugin(pluginOrArrayOrString);
     },
 
@@ -332,7 +330,8 @@ Ts.View = Backbone.View.extend({
      * @protected
      * @constructor
      */
-    init: function () {},
+    init: function () {
+    },
 
     /**
      * Used to assign a view to a particular el within your el (via selector)
@@ -389,8 +388,12 @@ Ts.View = Backbone.View.extend({
     },
 
     addSubview: function (view) {
-        this.__subviews.instances.push(view);
+        if (this.__subviews.instances.indexOf(view) == -1) {
+            this.__subviews.instances.push(view);
+        }
+
         this.log('view added: ', view);
+
         this.listenTo(view, 'removed', function () {
             // This view was removed.
             this.log('view removed: ', view);
@@ -430,11 +433,7 @@ Ts.View = Backbone.View.extend({
         }
 
         // Let's make sure that they are already registered.
-        _.each(selectors, function(view, selector) {
-            if (this.__subviews.instances.indexOf(view) == -1) {
-                this.__subviews.instances.push(view);
-            }
-        }, this);
+        _.each(selectors, this.addSubview, this);
 
         _.extend(this.__subviews.assignments, selectors);
 
@@ -497,9 +496,10 @@ Ts.View = Backbone.View.extend({
 
     afterRender: function () {
         this.initEl();
-        
+
         this.rendered = true;
         this.trigger('afterRender');
+        this.trigger('initEl');
     },
 
     /**
@@ -914,7 +914,8 @@ Ts.Plugin = Ts.Object.extend({
         return this;
     },
 
-    onAttach: function() {},
+    onAttach: function () {
+    },
 
     /**
      * @private
