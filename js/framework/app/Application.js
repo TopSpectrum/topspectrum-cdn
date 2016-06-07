@@ -1,5 +1,5 @@
-define(['underscore', 'Ts'], function(_, Ts) {
-
+define(['underscore', 'Ts', 'Promise'], function(_, Ts, Promise) {
+    
     /**
      * @class Application
      */
@@ -80,6 +80,10 @@ define(['underscore', 'Ts'], function(_, Ts) {
             });
 
             return deferred;
+        },
+
+        ajax: function(options) {
+            return Promise.resolve($.ajax(options));
         }
 
     });
