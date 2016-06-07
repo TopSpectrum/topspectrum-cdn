@@ -18,6 +18,10 @@ define(
          */
         var WidgetView = View.extend({
 
+            events: {
+                'click [data-action]': 'triggerAction'
+            },
+
             xtype: 'WidgetView',
 
             init: function() {
@@ -39,6 +43,19 @@ define(
                 if (this._compiledTemplate) {
                     this.render();
                 }
+            },
+
+            triggerAction: function(e) {
+                var $target = this.$(e.currentTarget);
+                var actionName = $target.attr('data-action');
+
+                if (!actionName) {
+                    // That's strange...
+                    return;
+                }
+
+                this.trigger('action', this, actionName, e);
+                this.trigger('action:' + actionName, this, actionName, e);
             },
 
             getModel: function () {
