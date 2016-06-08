@@ -163,6 +163,11 @@ define(
             eventName: null,
 
             /**
+             * @type {Object}
+             */
+            scope: null,
+
+            /**
              *
              * @param {Object} options
              * @param {Backbone.Events} options.eventSource
@@ -218,6 +223,7 @@ define(
              * @type {String}
              */
             selector: null,
+
 
             /**
              *
@@ -290,7 +296,9 @@ define(
             invoke: function() {
                 var $el = this.getElement();
                 var currentValue = this.getModelValue();
-                var predicateValue = this.predicateFn($el, currentValue);
+
+                var scope = this.scope || this;
+                var predicateValue = this.predicateFn.call(scope, $el, currentValue);
 
                 if (!_.isBoolean(predicateValue)) {
                     throw new Error('The predicateFn returned a non-boolean: ' + predicateValue);
@@ -423,7 +431,6 @@ define(
              * @type {Array}
              */
             bindings: null,
-
 
             initEl: function() {
                 this.stopBindings();

@@ -122,14 +122,15 @@ Ts.View = Backbone.View.extend({
             // We don't have an existing template. Let's try to auto detect one?
 
             if (isAnyKindOfTemplate) {
+                var engine = this.getTemplateEngine();
                 var tpl;
 
                 if (containsScriptTagTemplate) {
                     // We need to remove this element.
                     // The script tag is our html.
-                    tpl = Handlebars.compile($el.html());
+                    tpl = engine.compile($el.html());
 
-                    var $replacementEl = $(Handlebars.compile('<view id="{{ cid }}" data-view-template="compiled" data-view-rendered="false"></view>')(this));
+                    var $replacementEl = $(engine.compile('<view id="{{ cid }}" data-view-template="compiled" data-view-rendered="false"></view>')(this));
 
                     {
                         $el.replaceWith($replacementEl);
@@ -139,7 +140,7 @@ Ts.View = Backbone.View.extend({
                     this.log('Replacing script tag template with a view node. You should consider rendering now.');
                 } else if (containsATemplate) {
                     // So we are a template, but we don't need to replace the node.
-                    tpl = Handlebars.compile($el.html());
+                    tpl = engine.compile($el.html());
 
                     this.log('Accepting the content of the element as our template. You should consider rendering now.');
                 } else {
@@ -331,6 +332,7 @@ Ts.View = Backbone.View.extend({
      * @constructor
      */
     init: function () {
+
     },
 
     /**
@@ -533,6 +535,10 @@ Ts.View = Backbone.View.extend({
         }
     },
 
+    getTemplateEngine: function() {
+        return this.Handlebars || window.Handlebars;
+    },
+
     getTemplate: function () {
         if (!this.tpl) {
             // No rendering needed if we have no template.
@@ -542,9 +548,9 @@ Ts.View = Backbone.View.extend({
         if (_.isFunction(this.tpl)) {
             // return below.
         } else if (_.isString(this.tpl)) {
-            this.tpl = Handlebars.compile(this.tpl);
+            this.tpl = this.getTemplateEngine().compile(this.tpl);
         } else if (_.isArray(this.tpl)) {
-            this.tpl = Handlebars.compile(this.tpl.join(''));
+            this.tpl = this.getTemplateEngine().compile(this.tpl.join(''));
         } else {
             throw 'Unknown template type ' + this.tpl
         }
