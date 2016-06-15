@@ -37,7 +37,20 @@ define(['underscore', 'backbone', 'jquery'],
         },
         get: function (attr) {
             var value = Backbone.Model.prototype.get.call(this, attr);
-            return _.isFunction(value) ? value.call(this) : value;
+
+            if (!value) {
+                return value;
+            }
+
+            if (_.isFunction(value)) {
+                return value.call(this);
+            }
+
+            if (value.computedFunction) {
+                return value.computedFunction.call(this);
+            }
+
+            return value;
         },
         toJSON: function () {
             var json = Backbone.Model.prototype.toJSON.apply(this, arguments);

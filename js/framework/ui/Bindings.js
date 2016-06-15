@@ -1,7 +1,7 @@
 define(
-    ['jquery', 'underscore', 'app/Object', 'app/Plugin'],
+    ['jquery', 'underscore', 'app/Object', 'app/Plugin', 'Ladda'],
 
-    function ($, _, Object, Plugin) {
+    function ($, _, Object, Plugin, Ladda) {
         // /**
         //  * @class AbstractBinding
         //  */
@@ -174,26 +174,25 @@ define(
              * @param {String} options.eventName
              * @constructor
              */
-            initialize: function(options) {
+            initialize: function (options) {
                 $.extend(this, options);
 
                 this._super(options);
             },
 
-            start: function() {
-                console.log('listenTo', this.eventSource, this.eventName);
+            start: function () {
                 this.listenTo(this.eventSource, this.eventName, this.invoke);
 
                 return this;
             },
 
-            stop: function() {
+            stop: function () {
                 this.stopListening(this.eventSource, this.eventName);
 
                 return this;
             },
 
-            invoke: function() {
+            invoke: function () {
                 console.log('INVOKE>', this.eventName);
             }
         });
@@ -233,7 +232,7 @@ define(
              * @param {String} options.propertyName
              * @constructor
              */
-            initialize: function(options) {
+            initialize: function (options) {
                 options.eventSource = options.model || options.eventSource;
                 options.eventName = options.propertyName ? ('change:' + options.propertyName) : options.eventName;
 
@@ -246,11 +245,9 @@ define(
                 if (!this.propertyName) {
                     throw new Error('We cannot run without a propertyName');
                 }
-
-                this.log('BINDER.init()', this);
             },
 
-            getElement: function() {
+            getElement: function () {
                 var $el = this.view.$el;
                 var selector = _.result(this, 'selector');
 
@@ -266,11 +263,11 @@ define(
              * @param {jQuery} $el
              * @returns {*}
              */
-            getElementValue: function($el) {
+            getElementValue: function ($el) {
                 return $el.val() || $el.text();
             },
 
-            getModelValue: function() {
+            getModelValue: function () {
                 return this.model.get(this.propertyName);
             },
 
@@ -280,7 +277,7 @@ define(
              *
              * @returns {boolean}
              */
-            predicateFn: function($el, value) {
+            predicateFn: function ($el, value) {
                 return this.getElementValue($el) !== value;
             },
 
@@ -289,11 +286,11 @@ define(
              * @param {jQuery} $el
              * @param {*} value
              */
-            setElementValue: function($el, value) {
+            setElementValue: function ($el, value) {
                 $el.html(value);
             },
 
-            invoke: function() {
+            invoke: function () {
                 var $el = this.getElement();
                 var currentValue = this.getModelValue();
 
@@ -318,6 +315,8 @@ define(
          */
         var ClassNameBinding = SimpleBinding.extend({
 
+            xtype: 'ClassNameBinding',
+
             /**
              * @type {String}
              */
@@ -331,7 +330,7 @@ define(
              * @param {String} options.propertyName
              * @constructor
              */
-            initialize: function(options) {
+            initialize: function (options) {
                 this._super(options);
 
                 // force an error
@@ -343,7 +342,7 @@ define(
              * @param {jQuery} $el
              * @param {*|Boolean} value
              */
-            setElementValue: function($el, value) {
+            setElementValue: function ($el, value) {
                 var className = this.getClassName();
 
                 this.log('toggleClass', className, value);
@@ -351,7 +350,7 @@ define(
                 $el.toggleClass(className, value);
             },
 
-            predicateFn: function($el, value) {
+            predicateFn: function ($el, value) {
                 return !!value;
             },
 
@@ -360,26 +359,46 @@ define(
              * @param {jQuery} $el
              * @returns {*}
              */
-            getElementValue: function($el) {
+            getElementValue: function ($el) {
                 return $el.hasClass(this.getClassName());
             },
 
-            getClassName: function() {
+            getClassName: function () {
                 var className = _.result(this, 'className');
 
-                if(!className) {
+                if (!className) {
                     throw new Error('Must have a className defined');
                 }
 
                 return className;
             },
 
-            invoke: function() {
+            invoke: function () {
                 var $el = this.getElement();
                 var value = this.getModelValue();
                 var predicateValue = this.predicateFn($el, value);
 
                 this.setElementValue($el, predicateValue);
+            }
+        });
+
+        var DisabledBinding = SimpleBinding.extend({
+
+            /**
+             *
+             * @param {jQuery} $el
+             * @param {*} value
+             */
+            setElementValue: function ($el, value) {
+                $el
+                    .toggleClass('disabled', !!value)
+                    .prop('disabled', function () {
+                        return !!value;
+                    });
+            },
+
+            getElementValue: function ($el) {
+                return $el.is('.disabled');
             }
         });
 
@@ -396,7 +415,7 @@ define(
              * @param {String} options.propertyName
              * @constructor
              */
-            initialize: function(options) {
+            initialize: function (options) {
                 this._super(options);
             },
 
@@ -405,7 +424,7 @@ define(
              * @param {jQuery} $el
              * @param {*} value
              */
-            setElementValue: function($el, value) {
+            setElementValue: function ($el, value) {
                 $el.prop('checked', value);
             },
 
@@ -414,7 +433,7 @@ define(
              * @param {jQuery} $el
              * @returns {*}
              */
-            getElementValue: function($el) {
+            getElementValue: function ($el) {
                 return $el.prop('checked');
             }
         });
@@ -432,14 +451,14 @@ define(
              */
             bindings: null,
 
-            initEl: function() {
+            initEl: function () {
                 this.stopBindings();
 
                 this.startBindings();
             },
 
-            startBindings: function() {
-                _.each(this.bindings, function(binding) {
+            startBindings: function () {
+                _.each(this.bindings, function (binding) {
                     if (!binding) {
                         return;
                     }
@@ -448,7 +467,7 @@ define(
                 });
             },
 
-            stopBindings: function() {
+            stopBindings: function () {
                 // _.each(this.bindings, function(binding) {
                 //     if (!binding) {
                 //         return;
@@ -458,7 +477,7 @@ define(
                 // });
             },
 
-            attach: function() {
+            attach: function () {
                 this._super.apply(this, arguments);
 
                 this.listenTo(this.parent, 'initEl', this.initEl);
@@ -467,7 +486,7 @@ define(
                 var model = this.model || this.parent.model;
                 var type = this.type;
 
-                this.bindings = _.map(this.bindings, function(/** @type {AbstractBinding|Object} */ bindingConfigOrObject) {
+                this.bindings = _.map(this.bindings, function (/** @type {AbstractBinding|Object} */ bindingConfigOrObject) {
                     if (bindingConfigOrObject instanceof AbstractBinding) {
                         return bindingConfigOrObject;
                     }
@@ -504,6 +523,10 @@ define(
                         BindingType = ConsoleBinding;
                     } else if ('classname' === type) {
                         BindingType = ClassNameBinding;
+                    } else if ('disabled' === type) {
+                        BindingType = DisabledBinding;
+                    } else if ('ladda' === type) {
+                        BindingType = LaddaBinding;
                     }
 
                     if (!BindingType) {
@@ -514,7 +537,7 @@ define(
                 }, this);
             },
 
-            destroy: function() {
+            destroy: function () {
                 this._super();
             }
         });
@@ -542,7 +565,7 @@ define(
              *
              * @returns {boolean}
              */
-            predicateFn: function($el, value) {
+            predicateFn: function ($el, value) {
                 return true;
             },
 
@@ -551,15 +574,53 @@ define(
              * @param {jQuery} $el
              * @param {*} value
              */
-            setElementValue: function($el, value) {
+            setElementValue: function ($el, value) {
                 console.log('BINDING>', $el, '->', value);
             }
         });
 
         /**
+         * @type {LaddaBinding}
+         */
+        var LaddaBinding = SimpleBinding.extend({
+
+            /**
+             *
+             * @param {jQuery} $el
+             * @param {*} value
+             */
+            setElementValue: function ($el, value) {
+                var ladda = $el.data('ladda');
+
+                if (value) {
+                    if (!ladda) {
+                        ladda = Ladda.create($el[0]);
+
+                        $el.data('ladda', ladda);
+                    }
+
+                    ladda.start();
+                } else {
+                    if (!ladda) {
+                        return;
+                    }
+
+                    ladda.stop();
+                }
+            }
+        });
+
+
+        /**
          * @class Bindings
          */
         return {
+            /**
+             * @static
+             * @type {DisabledBinding}
+             */
+            'DisabledBinding': DisabledBinding,
+
             /**
              * @static
              * @type {BinderPlugin}
@@ -594,6 +655,8 @@ define(
              * @static
              * @type {CheckboxBinding}
              */
-            'CheckboxBinding': CheckboxBinding
+            'CheckboxBinding': CheckboxBinding,
+
+            'LaddaBinding': LaddaBinding
         }
     });

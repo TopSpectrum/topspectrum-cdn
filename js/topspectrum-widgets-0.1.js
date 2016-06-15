@@ -394,11 +394,11 @@ Ts.View = Backbone.View.extend({
             this.__subviews.instances.push(view);
         }
 
-        this.log('view added: ', view);
+        // this.log('view added: ', view);
 
         this.listenTo(view, 'removed', function () {
             // This view was removed.
-            this.log('view removed: ', view);
+            // this.log('view removed: ', view);
 
             // Let's delete it from our instances list
             this.__subviews.instances = _.without(this.__subviews.instances, view);
