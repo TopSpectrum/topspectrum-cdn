@@ -4,7 +4,7 @@ define(['underscore', 'backbone', 'jquery'],
 
     /**
      *
-     * @param {underscore} _
+     * @param {Underscore} _
      * @param {Backbone} Backbone
      * @param {jQuery} $
      * @returns {*}
@@ -17,6 +17,11 @@ define(['underscore', 'backbone', 'jquery'],
     var Model = Backbone.Model.extend({
 
         computed: undefined,
+
+        /**
+         * @type {Object}
+         */
+        schema: undefined,
 
         initialize: function () {
 
@@ -35,6 +40,7 @@ define(['underscore', 'backbone', 'jquery'],
                 }, this);
             }, this);
         },
+
         get: function (attr) {
             var value = Backbone.Model.prototype.get.call(this, attr);
 
@@ -52,14 +58,32 @@ define(['underscore', 'backbone', 'jquery'],
 
             return value;
         },
-        toJSON: function () {
-            var json = Backbone.Model.prototype.toJSON.apply(this, arguments);
-            _.each(json, function (value, key) {
+
+        /**
+         *
+         * @param {Boolean} [restrictedToSchema]
+         * @returns {any}
+         */
+        toJSON: function (restrictedToSchema) {
+            /**
+             * @type {Object}
+             */
+            var json = Backbone.Model.prototype.toJSON.apply(this, arguments) || {};
+            var schema = this.schema;
+
+            return _.omit(json, function(value, key, object) {
                 if (typeof value == 'function') {
-                    delete json[key];
+                    return true;
                 }
+
+                if (restrictedToSchema) {
+                    if (schema && !schema[key]) {
+                        return true;
+                    }
+                }
+
+                return false;
             });
-            return json;
         }
     });
 

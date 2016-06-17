@@ -4,7 +4,6 @@
 
 /**
  * @class View
- * @class Ts.View
  * @extends Backbone.View
  */
 Ts.View = Backbone.View.extend({
