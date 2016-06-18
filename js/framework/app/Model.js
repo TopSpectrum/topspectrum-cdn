@@ -4,8 +4,10 @@ define(['underscore', 'backbone', 'jquery'],
 
     /**
      *
-     * @param {Underscore} _
+     * @param {UnderscoreStatic} _
      * @param {Backbone} Backbone
+     * @param {Backbone.Model} Backbone.Model
+     * @param {function} Backbone.Model.extend
      * @param {jQuery} $
      * @returns {*}
      */
@@ -22,6 +24,10 @@ define(['underscore', 'backbone', 'jquery'],
          * @type {Object}
          */
         schema: undefined,
+
+        setters: undefined,
+
+        getters: undefined,
 
         initialize: function () {
 
@@ -41,8 +47,54 @@ define(['underscore', 'backbone', 'jquery'],
             }, this);
         },
 
-        get: function (attr) {
-            var value = Backbone.Model.prototype.get.call(this, attr);
+        /**
+         *
+         * @param {String|Object} key
+         * @param {*} value
+         * @param {Object} options
+         * @returns {Model}
+         */
+        set: function(key, value, options) {
+            var attrs, attr;
+
+            // Normalize the key-value into an object
+            if (_.isObject(key) || key == null) {
+                attrs = key;
+                options = value;
+            } else {
+                attrs = {};
+                attrs[key] = value;
+            }
+
+            // always pass an options hash around. This allows modifying
+            // the options inside the setter
+            options = options || {};
+
+            // Go over all the set attributes and call the setter if available
+            if (this.setters) {
+                for (attr in attrs) {
+                    if (!attrs.hasOwnProperty(attr)) {
+                        continue;
+                    }
+
+                    if (_.isFunction(this.setters[attr])) {
+                        attrs[attr] = this.setters[attr].call(this, attrs[attr], options);
+                    }
+                }
+            }
+
+            return this._super.call(this, attrs);
+        },
+
+        get: function(attr) {
+            var value;
+
+            // Call the getter if available
+            if (this.getters && _.isFunction(this.getters[attr])) {
+                value = this.getters[attr].call(this);
+            } else {
+                value = this._super.apply(this, arguments);
+            }
 
             if (!value) {
                 return value;
