@@ -189,7 +189,54 @@ var Ts = {
      * @returns {*}
      */
     result: function(object, propertyName, defaultValue, requiredType, exceptionTemplate) {
-        return Ts.Preconditions.checkType(_.result(object, propertyName, defaultValue), requiredType, exceptionTemplate);
+        return Ts.Preconditions.checkType(Ts.path(object, propertyName, defaultValue), requiredType, exceptionTemplate);
+    },
+
+
+    /**
+     *
+     * @param {Object} context
+     * @param {String} key
+     * @param {*} defaultValue
+     * @returns {*}
+     */
+    path: function(context, key, defaultValue) {
+        var paths = key.split('.');
+        var object = context[paths.shift()];
+        var useDefaultValue = false;
+
+        _.each(paths, function(key) {
+            if (!object) {
+                useDefaultValue = true;
+                return;
+            }
+
+            object = object[key];
+        });
+
+        return (useDefaultValue) ? (defaultValue) : object;
+    },
+
+    shallowDiff: function(a, b) {
+        return _.omit(a, function(v, k) {
+            return b[k] === v;
+        })
+    },
+
+    diff: function(a, b, reversible) {
+        function deepDiff(a, b, r, reversible) {
+            _.each(a, function(v, k) {
+                // already checked this or equal...
+                if (r.hasOwnProperty(k) || b[k] === v) return;
+                // but what if it returns an empty object? still attach?
+                r[k] = _.isObject(v) ? _.diff(v, b[k], reversible) : v;
+            });
+        }
+
+        var r = {};
+        deepDiff(a, b, r, reversible);
+        if (reversible) deepDiff(b, a, r, reversible);
+        return r;
     },
 
     namespace : function() {
