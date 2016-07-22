@@ -8,6 +8,7 @@
     <orderEntry type="library" name="underscore-DefinitelyTyped" level="application" />
     <orderEntry type="library" name="backgrid-DefinitelyTyped" level="application" />
     <orderEntry type="library" name="promise-DefinitelyTyped" level="application" />
+    <orderEntry type="library" name="google-libphonenumber-DefinitelyTyped" level="application" />
   </component>
   <component name="org.twodividedbyzero.idea.findbugs">
     <option name="_basePreferences">
