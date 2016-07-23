@@ -183,6 +183,8 @@ define(
             start: function () {
                 this.listenTo(this.eventSource, this.eventName, this.invoke);
 
+                this.invoke();
+
                 return this;
             },
 
