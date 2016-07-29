@@ -151,7 +151,7 @@ define(
                             return;
                         }
 
-                        models[value] = Model.parse($el);
+                        models[value] = Model.parse($el).model;
                     }, this);
 
                     this.models = models;

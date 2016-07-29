@@ -1,4 +1,4 @@
-define(['underscore', 'Ts', 'Promise'], function(_, Ts, Promise) {
+define(['underscore', 'Ts', 'Promise', 'app/Collection', 'app/Model'], function(_, Ts, Promise, Collection, Model) {
     
     /**
      * @class Application
@@ -92,7 +92,8 @@ define(['underscore', 'Ts', 'Promise'], function(_, Ts, Promise) {
      * Instantiate the Singleton.
      */
     var app = new Application({
-        profile: new Backbone.Model(window.profile)
+        profile: new Backbone.Model(window.profile),
+        models: new Model()
     });
 
     app.addPlugin('AutowirePlugin');
