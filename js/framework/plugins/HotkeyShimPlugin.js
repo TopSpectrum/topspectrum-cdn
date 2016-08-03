@@ -46,6 +46,10 @@ define(['jquery', 'underscore', 'Ts', 'mousetrap'], function($, _, Ts, mousetrap
                     this.addKeys(config);
                 }, this);
             }
+
+            if (this.autoload) {
+                mousetrap.trigger(this.autoload);
+            }
         },
 
         addKeys: function(keys) {

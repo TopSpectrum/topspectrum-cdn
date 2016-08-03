@@ -1,3 +1,5 @@
+"use strict";
+
 define(
     ['underscore', 'backbone', 'jquery', 'Ts'],
     
@@ -49,6 +51,5 @@ define(
                     }, this);
                 }
             }
-
         });
     });
