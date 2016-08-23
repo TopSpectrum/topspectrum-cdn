@@ -294,6 +294,7 @@ requirejs.config({
         'jquery.fileupload' : '//cdn.feedback/js/jquery.fileupload',
         'jquery.fileupload-image': '//cdn.feedback/js/jquery.fileupload-image',
         'jquery.fileupload-process' : '//cdn.feedback/js/jquery.fileupload-process',
+        'jquery.autogrowtextarea' : '//cdn.feedback/js/jquery.autogrowtextarea-3.0.0',
         'fileupload' : '//cdn.feedback/js/jquery.fileupload-validate',
         'jquery.iframe-transport': '//cdn.feedback/js/jquery.iframe-transport',
         'canvas-to-blob' : '//cdn.feedback/js/canvas-to-blob.min',
