@@ -1,3 +1,5 @@
+"use strict";
+
 define('document', [], function () {
     return document;
 });
@@ -46,6 +48,44 @@ define('Handlebars', ['moment'], function (moment) {
         raw: "x",
         ago: "ago"
     };
+
+    Handlebars.registerHelper('json', function(json) {
+
+        //Thanks to: http://jsfiddle.net/KJQ9K/
+        function highlightSyntax(json) {
+            json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+            return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+                var cls = 'number';
+                if (/^"/.test(match)) {
+                    if (/:$/.test(match)) {
+                        cls = 'key';
+                    } else {
+                        cls = 'string';
+                    }
+                } else if (/true|false/.test(match)) {
+                    cls = 'boolean';
+                } else if (/null/.test(match)) {
+                    cls = 'null';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            });
+        }
+
+        function pre(string) {
+            return new Handlebars.SafeString('<pre class="pretty-json">' + string + '</pre>');
+        }
+
+        try {
+            return pre(highlightSyntax(JSON.stringify(json, null, 4)));
+        } catch (exc) {
+            return pre("Failed to parse input obj:\n" + json);
+        }
+    });
+
+    Handlebars.registerHelper('typeOf', function(value) {
+        return (typeof value);
+    });
 
     Handlebars.registerHelper('ifImageAttachment', function (options) {
         var attachment = this;
@@ -268,6 +308,10 @@ requirejs.config({
             deps: ['css!//cdn.feedback/js/selectize/0.12.1/selectize.default.css']
         },
 
+        'FloatLabel': {
+            deps: ['css!//cdn.feedback/js/float-label/FloatLabel.css']
+        },
+
         "backgrid/select-all": ['backgrid']
     },
 
@@ -312,14 +356,17 @@ requirejs.config({
         'jquery.ui.widget': '//cdn.feedback/js/jquery.ui.widget-1.11.4',
         'position-calculator': '//cdn.feedback/js/position-calculator-1.1.2',
         'selectize': '//cdn.feedback/js/selectize/0.12.1/selectize.standalone',
+        'FloatLabel': '//cdn.feedback/js/float-label/FloatLabel',
         'bootstrap-rating': '//cdn.feedback/js/bootstrap-rating',
         'validator': '//cdn.feedback/js/customized/validator-0.8.0',
         'mousetrap': '//cdn.feedback/js/mousetrap.min',
         'text': '//cdn.feedback/js/framework/lib/text',
+        'jquery.payment': '//cdn.feedback/js/jquery.payment-1.3.0',
 
         'Ts': '//cdn.feedback/js/topspectrum-0.1',
 
         'url': '//cdn.feedback/js/url-2.1.0.min',
+        'URI': '//cdn.feedback/js/urijs-1.18.1.min',
         // 'gmap': '//cdn.feedback/js/googlemaps',
 
         // common-plugins.js
@@ -333,7 +380,6 @@ requirejs.config({
         'app/Plugin': '//cdn.feedback/js/framework/app/Plugin',
         'app/Feature': '//cdn.feedback/js/framework/app/Feature',
         'app/Application': '//cdn.feedback/js/framework/app/Application',
-
 
         'bluebird': '//cdn.jsdelivr.net/bluebird/3.4.1/bluebird.min',
         'Promise': '//cdn.jsdelivr.net/bluebird/3.4.1/bluebird.min',
@@ -349,6 +395,10 @@ requirejs.config({
         name: 'hbs',
         location: '//cdn.feedback/js/framework/lib',
         main: 'hbs'
+    }, {
+        name: 'async',
+        location: '//cdn.feedback/js/framework/lib',
+        main: 'async'
     }],
 
     map: {

@@ -34,6 +34,7 @@ define(['underscore', 'backbone', 'jquery'],
                 // Let's build the
                 this.on('change', function () {
                     var i, changedAttributes = this.changedAttributes() || [];
+
                     _.each(this.attributes, function (value, key) {
                         if (_.isFunction(value) && _.isArray(value.attributes)) {
                             for (i in value.attributes) {
