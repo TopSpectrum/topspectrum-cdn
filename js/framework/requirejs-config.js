@@ -381,8 +381,8 @@ requirejs.config({
         'app/Feature': '//cdn.feedback/js/framework/app/Feature',
         'app/Application': '//cdn.feedback/js/framework/app/Application',
 
-        'bluebird': '//cdn.jsdelivr.net/bluebird/3.4.1/bluebird.min',
-        'Promise': '//cdn.jsdelivr.net/bluebird/3.4.1/bluebird.min',
+        'bluebird': '//cdn.jsdelivr.net/bluebird/latest/bluebird.core.min',
+        'Promise': '//cdn.jsdelivr.net/bluebird/latest/bluebird.core.min',
         'ui/View': '//cdn.feedback/js/framework/ui/View',
         'ui/Widget': '//cdn.feedback/js/framework/ui/Widget',
         'ui/Modal': '//cdn.feedback/js/framework/ui/Modal',
