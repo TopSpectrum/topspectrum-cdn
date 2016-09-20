@@ -1,4 +1,4 @@
-define(['require', 'jquery', 'underscore', 'Ts'], function (require, $, _, Ts) {
+define(['require', 'jquery', 'underscore', 'Ts', 'bluebird'], function (require, $, _, Ts) {
 
     /**
      * @class Model
@@ -49,9 +49,9 @@ define(['require', 'jquery', 'underscore', 'Ts'], function (require, $, _, Ts) {
 
         /**
          * @private
-         * @type $.Deferred
+         * @type {Promise|{__reject:function,__resolve:function}}
          */
-        _hide_deferred: undefined,
+        __hide_promise: undefined,
 
         $modal: null,
 
@@ -87,44 +87,54 @@ define(['require', 'jquery', 'underscore', 'Ts'], function (require, $, _, Ts) {
         /**
          * Async call
          *
-         * @returns {*}
+         * @returns {Promise}
          */
         hide: function () {
+            // are we already hidden?
+            if (!this.isShown()) {
+                return Promise.resolve(this);
+            }
+
+            // Are we still waiting?
+            if (this.__hide_promise) {
+                return this.__hide_promise;
+            }
+
+            /** @type {Modal|{__hide_promise:Promise}} */
+            var scope = this;
+
             // If we were "in the process
-            if (this._hide_deferred) {
-                return this._hide_deferred.promise();
-            }
+            var __resolve;
+            var __reject;
+            /**
+             * @type {Promise}
+             */
+            var promise = scope.__hide_promise = new Promise(function(resolve, reject) {
+                __resolve = resolve;
+                __reject = reject;
+            });
 
-            var deferred = this._hide_deferred = $.Deferred();
+            scope.__hide_promise.__reject = __reject;
+            scope.__hide_promise.__resolve = __resolve;
 
-            {
-                if (this.isShown()) {
-                    this.$modal.modal('hide');
-                } else {
-                    if (this._hide_deferred) {
-                        // already hidden.
-                        this._hide_deferred.reject();
-                        delete this._hide_deferred;
-                    }
-                }
+            // Auto clean up our reference.
+            promise.finally(function() {
+                delete scope.__hide_promise;
+            });
 
-                var promise = deferred.promise();
-                var scope = this;
-
-                // Auto clean up our reference.
-                promise.always(function () {
-                    delete scope._hide_deferred;
-                });
-            }
+            // The promise will be completed in the onModalHidden callback.
+            scope.$modal.modal('hide');
 
             return promise;
         },
 
         remove: function () {
             if (this.isShown()) {
+                var scope = this;
+
                 this.hide()
-                    .done(function () {
-                        this.remove();
+                    .then(function () {
+                        scope.remove();
                     });
             } else {
                 this._super();
@@ -164,6 +174,7 @@ define(['require', 'jquery', 'underscore', 'Ts'], function (require, $, _, Ts) {
             return this.$el;
         },
 
+        //region show
         show: function () {
             this.beforeShow();
             this._show();
@@ -191,11 +202,11 @@ define(['require', 'jquery', 'underscore', 'Ts'], function (require, $, _, Ts) {
         afterShow: function() {
             this.trigger('afterShow');
         },
+        //endregion
 
         onModalHidden: function () {
-            if (this._hide_deferred) {
-                this._hide_deferred.resolveWith(this);
-                delete this._hide_deferred;
+            if (this.__hide_promise) {
+                this.__hide_promise.__resolve(this);
             }
 
             this.trigger('hidden');

@@ -1,5 +1,13 @@
 "use strict";
 
+define('Promise', function() {
+    return Promise; // I hope you added Bluebird to the external runtime.
+});
+
+define('bluebird', function() {
+    return Promise; // I hope you added Bluebird to the external runtime.
+});
+
 define('document', [], function () {
     return document;
 });
@@ -381,8 +389,8 @@ requirejs.config({
         'app/Feature': '//cdn.feedback/js/framework/app/Feature',
         'app/Application': '//cdn.feedback/js/framework/app/Application',
 
-        'bluebird': '//cdn.jsdelivr.net/bluebird/latest/bluebird.core.min',
-        'Promise': '//cdn.jsdelivr.net/bluebird/latest/bluebird.core.min',
+        // 'bluebird': '//cdn.jsdelivr.net/bluebird/latest/bluebird.core.min',
+        // 'Promise': '//cdn.jsdelivr.net/bluebird/latest/bluebird.core.min',
         'ui/View': '//cdn.feedback/js/framework/ui/View',
         'ui/Widget': '//cdn.feedback/js/framework/ui/Widget',
         'ui/Modal': '//cdn.feedback/js/framework/ui/Modal',

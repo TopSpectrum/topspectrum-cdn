@@ -84,7 +84,7 @@ define(['underscore', 'backbone', 'jquery'],
                     }
                 }
 
-                return this._super.call(this, attrs);
+                return this._super.apply(this, arguments);
             },
 
             get: function (attr) {
