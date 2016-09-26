@@ -321,6 +321,10 @@ Ts.View = Backbone.View.extend({
 
         if (this.autorender) {
             this.render();
+        } else {
+            if (this.$el) {
+                this.initEl();
+            }
         }
 
         return this;
