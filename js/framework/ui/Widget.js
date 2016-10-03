@@ -157,7 +157,7 @@ define(
                         }
 
                         /** @type {String} */
-                        var name;
+                        var name = nameOrSpec;
                         /** @type {Boolean} */
                         var flat = false;
 
