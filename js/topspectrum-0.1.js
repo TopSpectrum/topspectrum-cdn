@@ -13,6 +13,40 @@ var Ts = {
     VERSION : '1.0.0',
 
     /**
+     * Do a full page redirect.
+     *
+     * @param path
+     * @param params
+     * @param method
+     */
+    post: function (path, params, method) {
+        method = method || 'post'; // Set method to post by default if not specified.
+
+        // The rest of this code assumes you are not using a library.
+        // It can be made less wordy if you use one.
+        var form = document.createElement('form');
+        form.setAttribute('method', method);
+        form.setAttribute('action', path);
+
+        for (var key in params) {
+            if (params.hasOwnProperty(key)) {
+                var hiddenField = document.createElement('input');
+                hiddenField.setAttribute('type', 'hidden');
+                hiddenField.setAttribute('name', key);
+                hiddenField.setAttribute('value', params[key]);
+
+                form.appendChild(hiddenField);
+            }
+        }
+
+        document.body.appendChild(form);
+        form.submit();
+
+        // a promise that never completes.
+        return new Promise(function() {});
+    },
+
+    /**
      * Determines if Version2 is newer (greater) than Version1
      *
      * @source http://stackoverflow.com/questions/2809909/get-version-number-from-string-in-javascript

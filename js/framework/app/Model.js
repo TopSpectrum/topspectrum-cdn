@@ -167,10 +167,13 @@ define(['underscore', 'backbone', 'jquery'],
 
         /**
          *
-         * @param $modelEl
+         * @param {JQuery} $modelEl
+         * @param {Boolean} [flat] (defaults to false, backwards compat)
          * @return {{model:Backbone.Model, xtype:String, id:String, $el:jQuery}}
          */
-        Model.parse = function ($modelEl) {
+        Model.parse = function ($modelEl, flat) {
+            flat = !!flat; // default value is false
+
             if (!$modelEl || !$modelEl.is('model')) {
                 throw 'Wrong model type:' + $modelEl;
             }
@@ -335,11 +338,12 @@ define(['underscore', 'backbone', 'jquery'],
 
             $modelEl.find('property').each(function () {
                 var $field = $(this);
-                var key = $field.attr('key');
-                var type = $field.attr('type') || 'autodetect';
-                var spec = resolver($field);
+                var key = $field.attr('key') || $field.attr('data-key');
+                // var type = $field.attr('data-type') || 'autodetect';
+                var spec = decoder(resolver($field));
+                var value = (_.isObject(spec) && spec.value) ? (flat ? spec.value : spec) : spec;
 
-                object[key] = decoder(spec);
+                object[key] = value;
             });
 
             return {

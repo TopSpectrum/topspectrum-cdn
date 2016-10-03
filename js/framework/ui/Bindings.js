@@ -443,7 +443,7 @@ define(
         /**
          * This class assumes that the parent is a View
          *
-         * @class Binding
+         * @class BinderPlugin
          * @extends Plugin
          */
         var BinderPlugin = Plugin.extend({

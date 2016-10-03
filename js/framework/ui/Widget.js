@@ -107,6 +107,9 @@ define(
              */
             $el: undefined,
 
+            /**
+             * Example: els: { 'selector': 'name' }
+             */
             els: undefined,
             models: undefined,
 
@@ -123,16 +126,16 @@ define(
                     this.log('Attaching elements:', this.els);
 
                     var obj = {};
-                    _.each(this.els, function(value, key) {
-                        var $target = $el.find(key);
+                    _.each(this.els, function(selector, nameOfElement) {
+                        var $target = $el.find(selector);
                         var required = true;
 
                         if (!$target || !$target.length) {
-                            throw 'Could not find by selector: ' + key;
+                            throw 'Could not find by selector: ' + selector;
                         }
 
-                        this.log('Attaching ' + key + ' as ' + value + ': ', $target);
-                        obj[value] = $target;
+                        this.log('Attaching ' + nameOfElement + ' as ' + selector + ': ', $target);
+                        obj[nameOfElement] = $target;
                     }, this);
                     this.els = obj;
 
@@ -143,15 +146,27 @@ define(
                     this.log('Attaching models:', this.models);
 
                     var models = {};
-                    _.each(this.models, function(value, key) {
-                        var $el = this.$el.find(key);
+
+                    _.each(this.models, function(/** @type {String|{name:String,flat?:Boolean}} */nameOrSpec, /** @type {String} */selector) {
+                        var $el = this.$el.find(selector);
+
                         if (!$el || !$el.length) {
                             // NOTE: I needed to allow undefined models. Though I'm concerned this might cause bugs.
-                            this.log('Could not find Model: ' + key);
+                            this.log('Could not find Model: ' + selector);
                             return;
                         }
 
-                        models[value] = Model.parse($el).model;
+                        /** @type {String} */
+                        var name;
+                        /** @type {Boolean} */
+                        var flat = false;
+
+                        if (nameOrSpec.name) {
+                            name = nameOrSpec.name;
+                            flat = !!nameOrSpec.flat;
+                        }
+
+                        models[name] = Model.parse($el, flat).model;
                     }, this);
 
                     this.models = models;
