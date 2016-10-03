@@ -323,7 +323,8 @@ Ts.View = Backbone.View.extend({
             this.render();
         } else {
             if (this.$el) {
-                this.initEl();
+                /// we can only initEl if we have rendered.
+                // this.initEl();
             }
         }
 
