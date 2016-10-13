@@ -24,6 +24,10 @@ define('underscore', function () {
     return _;
 });
 
+define('Cookies', function() {
+    return Cookies;
+});
+
 define('backbone', function () {
     return Backbone;
 });
