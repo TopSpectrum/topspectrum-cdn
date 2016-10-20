@@ -415,7 +415,7 @@ requirejs.config({
 
     map: {
         '*': {
-            'css': 'https://cdnjs.cloudflare.com/ajax/libs/require-css/0.1.8/css.js'
+            'css': '//cdn.feedback/js/require-css-0.1.8.min.js'
         }
     },
 
