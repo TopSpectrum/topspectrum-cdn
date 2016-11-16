@@ -6,7 +6,6 @@ function assert(e) {
     }
 }
 
-
 (function ($) {
 
     $.ensureFn = function (fn) {
