@@ -297,7 +297,7 @@ requirejs.config({
 
         'fileupload': {
             deps: [
-                'css!//cdn.feedback/js/jasny-bootstrap.min.css',
+                'css!//www.cdn.feedback/js/jasny-bootstrap.min.css',
                 'jquery.fileupload-image',
                 'jquery.iframe-transport',
                 'canvas-to-blob',
@@ -307,21 +307,21 @@ requirejs.config({
 
         //'fileupload': {
         //    deps: [
-        //        '//cdn.feedback/js/load-image.all.min.js',
-        //        '//cdn.feedback/js/canvas-to-blob.min.js',
-        //        '//cdn.feedback/js/jquery.iframe-transport.js',
-        //        '//cdn.feedback/js/jquery.fileupload.js',
-        //        '//cdn.feedback/js/jquery.fileupload-process.js',
-        //        '//cdn.feedback/js/jquery.fileupload-image.js'
+        //        '//www.cdn.feedback/js/load-image.all.min.js',
+        //        '//www.cdn.feedback/js/canvas-to-blob.min.js',
+        //        '//www.cdn.feedback/js/jquery.iframe-transport.js',
+        //        '//www.cdn.feedback/js/jquery.fileupload.js',
+        //        '//www.cdn.feedback/js/jquery.fileupload-process.js',
+        //        '//www.cdn.feedback/js/jquery.fileupload-image.js'
         //    ]
         //},
 
         'selectize': {
-            deps: ['css!//cdn.feedback/js/selectize/0.12.1/selectize.default.css']
+            deps: ['css!//www.cdn.feedback/js/selectize/0.12.1/selectize.default.css']
         },
 
         'FloatLabel': {
-            deps: ['css!//cdn.feedback/js/float-label/FloatLabel.css']
+            deps: ['css!//www.cdn.feedback/js/float-label/FloatLabel.css']
         },
 
         "backgrid/select-all": ['backgrid']
@@ -333,89 +333,89 @@ requirejs.config({
 
         'reviews': '../app/reviews', // This is misplaced and belongs in default.feedback
 
-        '//cdn.feedback/js/load-image.all.min.js' : '//cdn.feedback/js/load-image.all.min',
-        '//cdn.feedback/js/canvas-to-blob.min.js' : '//cdn.feedback/js/canvas-to-blob.min',
-        '//cdn.feedback/js/jquery.iframe-transport.js' : '//cdn.feedback/js/jquery.iframe-transport',
-        '//cdn.feedback/js/jquery.fileupload.js' : '//cdn.feedback/js/jquery.fileupload',
-        '//cdn.feedback/js/jquery.fileupload-process.js' : '//cdn.feedback/js/jquery.fileupload-process',
-        '//cdn.feedback/js/jquery.fileupload-image.js': '//cdn.feedback/js/jquery.fileupload-image',
+        '//www.cdn.feedback/js/load-image.all.min.js' : '//www.cdn.feedback/js/load-image.all.min',
+        '//www.cdn.feedback/js/canvas-to-blob.min.js' : '//www.cdn.feedback/js/canvas-to-blob.min',
+        '//www.cdn.feedback/js/jquery.iframe-transport.js' : '//www.cdn.feedback/js/jquery.iframe-transport',
+        '//www.cdn.feedback/js/jquery.fileupload.js' : '//www.cdn.feedback/js/jquery.fileupload',
+        '//www.cdn.feedback/js/jquery.fileupload-process.js' : '//www.cdn.feedback/js/jquery.fileupload-process',
+        '//www.cdn.feedback/js/jquery.fileupload-image.js': '//www.cdn.feedback/js/jquery.fileupload-image',
 
-        'spinner': '//cdn.feedback/js/spin.min',
+        'spinner': '//www.cdn.feedback/js/spin.min',
 
-        'load-image-exif' : '//cdn.feedback/js/load-image-exif-2.1.0',
-        'load-image-ios' : '//cdn.feedback/js/load-image-ios-2.1.0',
-        'load-image-orientation' : '//cdn.feedback/js/load-image-orientation-2.1.0',
-        'load-image-meta' : '//cdn.feedback/js/load-image-meta-2.1.0',
-        'load-image' : '//cdn.feedback/js/load-image-2.1.0',
-        'jquery.fileupload' : '//cdn.feedback/js/jquery.fileupload',
-        'jquery.fileupload-image': '//cdn.feedback/js/jquery.fileupload-image',
-        'jquery.fileupload-process' : '//cdn.feedback/js/jquery.fileupload-process',
-        'jquery.autogrowtextarea' : '//cdn.feedback/js/jquery.autogrowtextarea-3.0.0',
-        'fileupload' : '//cdn.feedback/js/jquery.fileupload-validate',
-        'jquery.iframe-transport': '//cdn.feedback/js/jquery.iframe-transport',
-        'canvas-to-blob' : '//cdn.feedback/js/canvas-to-blob.min',
-        // 'jstz' : '//cdn.feedback/js/jstz-1.0.4.min',
-        // 'moment' : '//cdn.feedback/js/moment-2.9.0.min',
+        'load-image-exif' : '//www.cdn.feedback/js/load-image-exif-2.1.0',
+        'load-image-ios' : '//www.cdn.feedback/js/load-image-ios-2.1.0',
+        'load-image-orientation' : '//www.cdn.feedback/js/load-image-orientation-2.1.0',
+        'load-image-meta' : '//www.cdn.feedback/js/load-image-meta-2.1.0',
+        'load-image' : '//www.cdn.feedback/js/load-image-2.1.0',
+        'jquery.fileupload' : '//www.cdn.feedback/js/jquery.fileupload',
+        'jquery.fileupload-image': '//www.cdn.feedback/js/jquery.fileupload-image',
+        'jquery.fileupload-process' : '//www.cdn.feedback/js/jquery.fileupload-process',
+        'jquery.autogrowtextarea' : '//www.cdn.feedback/js/jquery.autogrowtextarea-3.0.0',
+        'fileupload' : '//www.cdn.feedback/js/jquery.fileupload-validate',
+        'jquery.iframe-transport': '//www.cdn.feedback/js/jquery.iframe-transport',
+        'canvas-to-blob' : '//www.cdn.feedback/js/canvas-to-blob.min',
+        // 'jstz' : '//www.cdn.feedback/js/jstz-1.0.4.min',
+        // 'moment' : '//www.cdn.feedback/js/moment-2.9.0.min',
 
         // Supporting utilities
-        'backgrid': '//cdn.feedback/js/backgrid/0.3.5/backgrid',
-        'backgrid/select-all': '//cdn.feedback/js/backgrid/0.3.5/backgrid.extension.selectall',
-        'backbone.pageable': '//cdn.feedback/js/backbone.paginator-2.0.0',
-        'sifter': '//cdn.feedback/js/sifter-0.4.5.min',
+        'backgrid': '//www.cdn.feedback/js/backgrid/0.3.5/backgrid',
+        'backgrid/select-all': '//www.cdn.feedback/js/backgrid/0.3.5/backgrid.extension.selectall',
+        'backbone.pageable': '//www.cdn.feedback/js/backbone.paginator-2.0.0',
+        'sifter': '//www.cdn.feedback/js/sifter-0.4.5.min',
         'microplugin': '//cdn.feedbload-imageack/js/microplugin-0.0.3.min',
-        'jscroll': '//cdn.feedback/js/jquery.jscroll-2.3.4',
-        'jqueryui': '//cdn.feedback/js/jquery-ui-1.11.4',
-        'jquery.ui.widget': '//cdn.feedback/js/jquery.ui.widget-1.11.4',
-        'position-calculator': '//cdn.feedback/js/position-calculator-1.1.2',
-        'selectize': '//cdn.feedback/js/selectize/0.12.1/selectize.standalone',
-        'FloatLabel': '//cdn.feedback/js/float-label/FloatLabel',
-        'bootstrap-rating': '//cdn.feedback/js/bootstrap-rating',
-        'validator': '//cdn.feedback/js/customized/validator-0.8.0',
-        'mousetrap': '//cdn.feedback/js/mousetrap.min',
-        'text': '//cdn.feedback/js/framework/lib/text',
-        'jquery.payment': '//cdn.feedback/js/jquery.payment-1.3.0',
+        'jscroll': '//www.cdn.feedback/js/jquery.jscroll-2.3.4',
+        'jqueryui': '//www.cdn.feedback/js/jquery-ui-1.11.4',
+        'jquery.ui.widget': '//www.cdn.feedback/js/jquery.ui.widget-1.11.4',
+        'position-calculator': '//www.cdn.feedback/js/position-calculator-1.1.2',
+        'selectize': '//www.cdn.feedback/js/selectize/0.12.1/selectize.standalone',
+        'FloatLabel': '//www.cdn.feedback/js/float-label/FloatLabel',
+        'bootstrap-rating': '//www.cdn.feedback/js/bootstrap-rating',
+        'validator': '//www.cdn.feedback/js/customized/validator-0.8.0',
+        'mousetrap': '//www.cdn.feedback/js/mousetrap.min',
+        'text': '//www.cdn.feedback/js/framework/lib/text',
+        'jquery.payment': '//www.cdn.feedback/js/jquery.payment-1.3.0',
 
-        'Ts': '//cdn.feedback/js/topspectrum-0.1',
+        'Ts': '//www.cdn.feedback/js/topspectrum-0.1',
 
-        'url': '//cdn.feedback/js/url-2.1.0.min',
-        'URI': '//cdn.feedback/js/urijs-1.18.1.min',
-        // 'gmap': '//cdn.feedback/js/googlemaps',
+        'url': '//www.cdn.feedback/js/url-2.1.0.min',
+        'URI': '//www.cdn.feedback/js/urijs-1.18.1.min',
+        // 'gmap': '//www.cdn.feedback/js/googlemaps',
 
         // common-plugins.js
-        'AutowirePlugin': '//cdn.feedback/js/framework/plugins/AutowirePlugin',
-        'HotkeyShimPlugin': '//cdn.feedback/js/framework/plugins/HotkeyShimPlugin',
+        'AutowirePlugin': '//www.cdn.feedback/js/framework/plugins/AutowirePlugin',
+        'HotkeyShimPlugin': '//www.cdn.feedback/js/framework/plugins/HotkeyShimPlugin',
 
         // "framework.js"
-        'app/Object': '//cdn.feedback/js/framework/app/Object',
-        'app/Model': '//cdn.feedback/js/framework/app/Model',
-        'app/Collection': '//cdn.feedback/js/framework/app/Collection',
-        'app/Plugin': '//cdn.feedback/js/framework/app/Plugin',
-        'app/Feature': '//cdn.feedback/js/framework/app/Feature',
-        'app/Application': '//cdn.feedback/js/framework/app/Application',
+        'app/Object': '//www.cdn.feedback/js/framework/app/Object',
+        'app/Model': '//www.cdn.feedback/js/framework/app/Model',
+        'app/Collection': '//www.cdn.feedback/js/framework/app/Collection',
+        'app/Plugin': '//www.cdn.feedback/js/framework/app/Plugin',
+        'app/Feature': '//www.cdn.feedback/js/framework/app/Feature',
+        'app/Application': '//www.cdn.feedback/js/framework/app/Application',
 
         // 'bluebird': '//cdn.jsdelivr.net/bluebird/latest/bluebird.core.min',
         // 'Promise': '//cdn.jsdelivr.net/bluebird/latest/bluebird.core.min',
-        'ui/View': '//cdn.feedback/js/framework/ui/View',
-        'ui/Widget': '//cdn.feedback/js/framework/ui/Widget',
-        'ui/Modal': '//cdn.feedback/js/framework/ui/Modal',
-        'ui/Grid': '//cdn.feedback/js/framework/ui/Grid',
-        'ui/Action': '//cdn.feedback/js/framework/ui/Action',
-        'ui/Bindings': '//cdn.feedback/js/framework/ui/Bindings'
+        'ui/View': '//www.cdn.feedback/js/framework/ui/View',
+        'ui/Widget': '//www.cdn.feedback/js/framework/ui/Widget',
+        'ui/Modal': '//www.cdn.feedback/js/framework/ui/Modal',
+        'ui/Grid': '//www.cdn.feedback/js/framework/ui/Grid',
+        'ui/Action': '//www.cdn.feedback/js/framework/ui/Action',
+        'ui/Bindings': '//www.cdn.feedback/js/framework/ui/Bindings'
     },
 
     packages: [{
         name: 'hbs',
-        location: '//cdn.feedback/js/framework/lib',
+        location: '//www.cdn.feedback/js/framework/lib',
         main: 'hbs'
     }, {
         name: 'async',
-        location: '//cdn.feedback/js/framework/lib',
+        location: '//www.cdn.feedback/js/framework/lib',
         main: 'async'
     }],
 
     map: {
         '*': {
-            'css': '//cdn.feedback/js/require-css-0.1.8.min.js'
+            'css': '//www.cdn.feedback/js/require-css-0.1.8.min.js'
         }
     },
 
